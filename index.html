@@ -18,18 +18,13 @@
 
     <style>
         :root {
-            /* Exact color samples from the MOIST logo */
             --moist-teal: #34becd;
             --moist-teal-dark: #1c96a5;
             --moist-teal-light: #8cedfa;
             --moist-bg: #344252;
             --moist-bg-dark: #222d3a;
-            
-            /* The Accent Neons */
             --neon-pink: #ff1493;
             --neon-purple: #aa00ff;
-
-            /* Thematic Gradients */
             --moist-gradient: linear-gradient(135deg, var(--moist-teal-light) 0%, var(--moist-teal) 100%);
             --moist-gradient-dark: linear-gradient(135deg, var(--moist-teal), var(--moist-teal-dark));
             --neon-trim-gradient: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
@@ -43,16 +38,23 @@
             image-rendering: pixelated; width: 100vw; height: 100vh; display: block;
         }
 
-        /* --- Menus --- */
-        #start-menu, #victory-menu, #game-over-menu, #pause-menu {
-            position: fixed; inset: 0; 
-            background-color: rgba(34, 45, 58, 0.45); 
-            z-index: 10000;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; color: white;
-            backdrop-filter: blur(12px) saturate(150%);
-            -webkit-backdrop-filter: blur(12px) saturate(150%);
+        .cyber-panel {
+            background: rgba(34, 45, 58, 0.92);
+            backdrop-filter: blur(16px) saturate(180%);
             border: 4px solid transparent;
             border-image: var(--neon-trim-gradient) 1;
+            box-shadow: 
+                0 0 30px var(--neon-purple),
+                0 0 60px rgba(170, 0, 255, 0.3),
+                inset 0 0 25px rgba(140, 237, 250, 0.25);
+            color: white;
+            text-shadow: 0 0 12px var(--neon-purple);
+        }
+
+        #start-menu, #victory-menu, #game-over-menu, #pause-menu {
+            position: fixed; inset: 0; 
+            z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         #victory-menu, #game-over-menu, #pause-menu { display: none; }
 
@@ -62,84 +64,181 @@
                         linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
             background-size: 100% 4px, 3px 100%;
             z-index: -1;
+            animation: scanline 4s linear infinite;
         }
+        @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
         #start-menu h1, #victory-menu h1, #game-over-menu h1, #pause-menu h1 {
-            color: white; font-weight: 800; font-size: 52px; margin-bottom: 20px; text-align: center;
-            text-shadow: 0 0 15px var(--moist-teal-dark), 0 0 35px var(--moist-teal), 4px 4px 0px var(--neon-purple); 
-            letter-spacing: -2px;
+            font-size: 68px; margin-bottom: 24px; text-align: center;
+            text-transform: uppercase; letter-spacing: -5px;
+            text-shadow: 
+                0 0 20px var(--moist-teal-dark),
+                0 0 40px var(--moist-teal),
+                0 0 60px var(--neon-purple),
+                4px 4px 0px var(--neon-pink);
         }
         
         #start-menu p, #victory-menu p, #game-over-menu p, #pause-menu p {
-            color: var(--moist-teal-light); font-size: 16px; margin-top: 10px; text-align: center;
-            text-shadow: 0 0 10px var(--moist-teal-dark);
+            color: var(--moist-teal-light); font-size: 17px; margin-top: 12px; text-align: center;
+            text-shadow: 0 0 12px var(--moist-teal);
+            max-width: 620px;
         }
 
         .start-btn {
-            padding: 18px 40px; font-size: 21px; font-family: inherit;
+            padding: 20px 52px; font-size: 24px; font-family: inherit;
             background: var(--moist-gradient); 
-            color: var(--moist-bg-dark); border: none; border-radius: 50px; cursor: pointer; font-weight: bold;
-            box-shadow: 0 8px #136a75, 0 0 25px var(--moist-teal), inset 0 0 10px var(--neon-pink); 
-            animation: pulse 1.5s infinite; text-transform: uppercase; letter-spacing: 1px;
-            transition: all 0.2s;
-            outline: none; /* Prevents focus styling */
+            color: var(--moist-bg-dark); border: none; border-radius: 9999px; cursor: pointer; font-weight: bold;
+            box-shadow: 
+                0 12px #136a75,
+                0 0 35px var(--moist-teal),
+                inset 0 0 20px var(--neon-pink),
+                0 0 0 6px rgba(170, 0, 255, 0.3);
+            animation: pulse 1.8s infinite; text-transform: uppercase; letter-spacing: 3px;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            outline: none;
         }
-        .start-btn:hover { transform: scale(1.05); }
-        .start-btn:active { transform: translateY(4px) scale(0.98); box-shadow: 0 4px #136a75, 0 0 15px var(--moist-teal); }
+        .start-btn:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 16px #136a75, 0 0 45px var(--moist-teal); }
+        .start-btn:active { transform: translateY(6px) scale(0.95); }
 
         #pause-menu #pause-restart-btn { background: var(--moist-gradient-dark); color: white; }
 
         .victory-title { color: var(--moist-teal-light); }
-        .game-over-title { color: #ff4444; text-shadow: 0 0 20px #cc0000 !important; } 
+        .game-over-title { color: #ff4444; text-shadow: 0 0 30px #ff1493, 0 0 60px #cc0000 !important; } 
         
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
-        /* --- In-Game UI --- */
-        #ui { 
-            position: absolute; top: 15px; left: 15px; color: white; 
-            text-shadow: 2px 2px 0 var(--neon-purple), 0 0 10px var(--moist-teal-dark); pointer-events: none; 
-            font-size: 24px; z-index: 10; display: none;
+        #hud {
+            position: absolute; top: 18px; left: 18px; z-index: 10; display: none;
+            font-family: monospace; font-weight: bold; letter-spacing: 2px;
+            background: rgba(20, 28, 42, 0.92); backdrop-filter: blur(18px);
+            border: 4px solid transparent; border-image: var(--neon-trim-gradient) 1;
+            border-radius: 14px;
+            padding: 12px 24px; 
+            box-shadow: 
+                0 0 25px var(--neon-pink),
+                0 0 55px rgba(170, 0, 255, 0.5),
+                inset 0 0 20px rgba(140, 237, 250, 0.4);
+            color: white; pointer-events: none;
+            min-width: 620px;
         }
-        #damage-flash {
-            position: fixed; inset: 0; background: red; opacity: 0; z-index: 5; pointer-events: none;
-            transition: opacity 0.1s;
+        .hud-row { display: flex; align-items: center; gap: 24px; }
+
+        .hp-group { display: flex; align-items: center; gap: 14px; flex: 1; }
+        .hp-label {
+            font-size: 14px; color: var(--moist-teal-light); text-shadow: 0 0 10px var(--moist-teal);
+            writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: 3px;
+        }
+        .hp-bar-container {
+            flex: 1; height: 22px; background: #0f1825; border: 3px solid var(--neon-pink);
+            border-radius: 9999px; overflow: hidden; box-shadow: 0 0 18px var(--neon-pink);
+        }
+        #hp-fill {
+            height: 100%; background: linear-gradient(90deg, #8cedfa, #34becd);
+            box-shadow: 0 0 20px #8cedfa; transition: width 0.25s ease;
+        }
+        #hp-num {
+            font-size: 26px; color: #8cedfa; text-shadow: 0 0 15px #8cedfa; min-width: 52px; text-align: right;
+        }
+
+        .ammo-group { text-align: center; min-width: 130px; }
+        #weapon-name {
+            font-size: 17px; color: #ff1493; text-shadow: 0 0 14px #ff1493;
+            margin-bottom: 3px; letter-spacing: 4px;
+        }
+        .ammo-count {
+            font-size: 29px; color: var(--moist-teal-light); text-shadow: 0 0 12px var(--moist-teal);
+        }
+        .ammo-count span:first-child { color: #ffffff; }
+
+        .score-group {
+            font-size: 19px; color: #ffffff; text-shadow: 0 0 12px var(--neon-purple);
+            white-space: nowrap;
+        }
+        #score-num { color: #ff1493; text-shadow: 0 0 14px #ff1493; }
+
+        .level-group {
+            text-align: center;
+            min-width: 92px;
+            border-left: 3px solid var(--neon-purple);
+            padding-left: 18px;
+        }
+        #level-label {
+            font-size: 13px;
+            color: var(--moist-teal-light);
+            text-shadow: 0 0 10px var(--moist-teal);
+            letter-spacing: 4px;
+        }
+        #level-num {
+            font-size: 32px;
+            color: #ff1493;
+            text-shadow: 0 0 18px #ff1493;
+            line-height: 1;
+        }
+
+        .time-group {
+            text-align: center;
+            min-width: 110px;
+            border-left: 3px solid #8cedfa;
+            padding-left: 18px;
+        }
+        #time-label {
+            font-size: 13px;
+            color: var(--moist-teal-light);
+            text-shadow: 0 0 10px var(--moist-teal);
+            letter-spacing: 4px;
+        }
+        #time-display {
+            font-size: 32px;
+            color: #8cedfa;
+            text-shadow: 0 0 18px #8cedfa;
+            line-height: 1;
         }
 
         #boss-ui {
-            position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
-            width: 70%; max-width: 500px; display: none; z-index: 10;
-            text-align: center; color: white; text-shadow: 2px 2px 0 var(--moist-bg-dark); pointer-events: none;
+            position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+            width: 72%; max-width: 560px; display: none; z-index: 10;
+            text-align: center; color: white; pointer-events: none;
+        }
+        #boss-ui h2 {
+            font-size: 22px; letter-spacing: 6px; color: #ff1493;
+            text-shadow: 0 0 20px #ff1493; margin-bottom: 8px;
         }
         #boss-bar-bg {
-            width: 100%; height: 25px; background: rgba(34, 45, 58, 0.8); border: 3px solid var(--neon-pink); 
-            border-radius: 10px; overflow: hidden; margin-top: 5px; box-shadow: 0 0 15px var(--neon-purple);
+            width: 100%; height: 32px; background: #0f1825; 
+            border: 4px solid var(--neon-pink); border-radius: 9999px; 
+            overflow: hidden; box-shadow: 0 0 25px var(--neon-pink);
         }
         #boss-bar-fill {
-            width: 100%; height: 100%; background: var(--moist-gradient); transition: width 0.1s linear;
+            height: 100%; background: linear-gradient(90deg, #ff1493, #aa00ff);
+            transition: width 0.2s linear; box-shadow: 0 0 20px #ff1493;
         }
 
         #minimap {
-            position: absolute; top: 15px; right: 15px; width: 120px; height: 108px; 
-            background: rgba(34, 45, 58, 0.8); border: 3px solid var(--neon-purple); 
-            border-radius: 8px; z-index: 10; display: none; image-rendering: pixelated;
+            position: absolute; top: 18px; right: 18px; width: 132px; height: 118px; 
+            background: rgba(20, 28, 42, 0.9); border: 4px solid var(--neon-purple); 
+            border-radius: 12px; z-index: 10; display: none; image-rendering: pixelated;
+            box-shadow: 0 0 25px var(--neon-purple), inset 0 0 15px rgba(140, 237, 250, 0.3);
         }
 
         #pause-btn {
-            position: absolute; top: 15px; right: 170px; width: 52px; height: 52px;
-            background: var(--moist-gradient-dark); border: 3px solid var(--neon-pink); 
+            position: absolute; top: 18px; right: 170px; width: 58px; height: 58px;
+            background: rgba(34, 45, 58, 0.9); border: 4px solid var(--neon-pink); 
             border-radius: 50%; display: none; align-items: center; justify-content: center;
-            font-size: 32px; color: white; z-index: 30; cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4), 0 0 15px var(--neon-purple); user-select: none;
+            font-size: 34px; color: white; z-index: 30; cursor: pointer;
+            box-shadow: 0 0 25px var(--neon-pink), 0 8px 20px rgba(0,0,0,0.5);
+            transition: all 0.2s;
         }
+        #pause-btn:hover { box-shadow: 0 0 35px var(--neon-pink); transform: scale(1.1); }
         #pause-btn:active { transform: scale(0.9); }
 
         #weapon-wrapper {
-            position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
-            width: 200px; height: 240px; z-index: 15; pointer-events: none; display: none;
+            position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+            width: 220px; height: 260px; z-index: 30; pointer-events: none; display: none;
         }
         #weapon-model {
             position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
             transform-origin: bottom center; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 0 40px var(--moist-teal-light), 0 0 80px var(--neon-pink);
         }
         #water-spout {
             position: absolute; top: 0px; left: 50%; width: 60px; height: 80px;
@@ -155,31 +254,12 @@
         .firing #water-spout { animation: waterBlast 0.25s ease-out; }
         .charging #weapon-model { animation: chargePulse 0.6s infinite alternate; }
 
-        .boop-weapon #weapon-model { 
-            width: 70px; height: 160px;
-            background: linear-gradient(to top, var(--moist-teal-dark), var(--moist-teal), var(--moist-teal-light)) !important; 
-            clip-path: polygon(30% 0%, 70% 0%, 80% 40%, 100% 60%, 100% 100%, 0% 100%, 0% 60%, 20% 40%) !important; border-radius: 0;
-            border-bottom: 5px solid var(--neon-pink);
-        }
-        .boop-weapon #weapon-model::after {
-            content: ''; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 16px; height: 40px; background: rgba(255, 255, 255, 0.9); border-radius: 10px; box-shadow: 0 0 15px var(--moist-teal-light); transition: all 0.3s;
-        }
-        .charge-weapon #weapon-model { 
-            width: 140px; height: 190px;
-            background: linear-gradient(to top, var(--moist-bg-dark), var(--moist-teal-dark), var(--moist-teal)) !important; 
-            clip-path: polygon(15% 15%, 85% 15%, 100% 40%, 90% 100%, 10% 100%, 0% 40%) !important; border-radius: 30px 30px 0 0; 
-        }
-        .charge-weapon #weapon-model::after {
-            content: ''; position: absolute; top: 35px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: radial-gradient(circle, var(--moist-teal-light) 20%, transparent 80%); border-radius: 50%; box-shadow: 0 0 25px var(--moist-teal-light); animation: pulseCore 1.5s infinite alternate; transition: all 0.3s;
-        }
-        .blast-weapon #weapon-model { 
-            width: 130px; height: 210px;
-            background: linear-gradient(to top, var(--moist-bg-dark), var(--moist-teal), var(--moist-teal-light)) !important; 
-            clip-path: polygon(0% 0%, 20% 40%, 40% 15%, 60% 15%, 80% 40%, 100% 0%, 90% 100%, 10% 100%) !important; border-radius: 0;
-        }
-        .blast-weapon #weapon-model::after {
-            content: ''; position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: 40px; height: 80px; background: rgba(140, 237, 250, 0.8); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 20px var(--moist-teal-light); transition: all 0.3s;
-        }
+        .boop-weapon #weapon-model { width: 72px; height: 168px; background: linear-gradient(to top, var(--moist-teal-dark), var(--moist-teal), var(--moist-teal-light)) !important; clip-path: polygon(30% 0%, 70% 0%, 80% 40%, 100% 60%, 100% 100%, 0% 100%, 0% 60%, 20% 40%) !important; border-radius: 0; border-bottom: 6px solid var(--neon-pink); }
+        .boop-weapon #weapon-model::after { content: ''; position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: 18px; height: 42px; background: rgba(255,255,255,0.95); border-radius: 10px; box-shadow: 0 0 20px var(--moist-teal-light); }
+        .charge-weapon #weapon-model { width: 148px; height: 198px; background: linear-gradient(to top, var(--moist-bg-dark), var(--moist-teal-dark), var(--moist-teal)) !important; clip-path: polygon(15% 15%, 85% 15%, 100% 40%, 90% 100%, 10% 100%, 0% 40%) !important; border-radius: 30px 30px 0 0; }
+        .charge-weapon #weapon-model::after { content: ''; position: absolute; top: 38px; left: 50%; transform: translateX(-50%); width: 64px; height: 64px; background: radial-gradient(circle, var(--moist-teal-light) 20%, transparent 80%); border-radius: 50%; box-shadow: 0 0 30px var(--moist-teal-light); animation: pulseCore 1.5s infinite alternate; }
+        .blast-weapon #weapon-model { width: 138px; height: 218px; background: linear-gradient(to top, var(--moist-bg-dark), var(--moist-teal), var(--moist-teal-light)) !important; clip-path: polygon(0% 0%, 20% 40%, 40% 15%, 60% 15%, 80% 40%, 100% 0%, 90% 100%, 10% 100%) !important; border-radius: 0; }
+        .blast-weapon #weapon-model::after { content: ''; position: absolute; top: 32px; left: 50%; transform: translateX(-50%); width: 44px; height: 84px; background: rgba(140, 237, 250, 0.85); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); box-shadow: 0 0 25px var(--moist-teal-light); }
 
         @keyframes pulseCore { 0% { transform: translateX(-50%) scale(0.8); opacity: 0.7; } 100% { transform: translateX(-50%) scale(1.1); opacity: 1; } }
 
@@ -188,56 +268,178 @@
         .blast-weapon #water-spout { background: radial-gradient(ellipse at bottom, rgba(140, 237, 250, 0.9) 0%, rgba(52, 190, 205, 0) 70%); }
 
         #touch-controls { position: absolute; inset: 0; pointer-events: none; z-index: 20; display: none; }
-        #joystick-zone {
-            position: absolute; bottom: 30px; left: 30px; width: 140px; height: 140px;
-            background: rgba(52, 190, 205, 0.2); border: 2px solid rgba(170, 0, 255, 0.5);
-            border-radius: 50%; pointer-events: auto; cursor: pointer;
-        }
-        #joystick-knob {
-            position: absolute; top: 50%; left: 50%; width: 60px; height: 60px;
-            background: rgba(52, 190, 205, 0.8); border-radius: 50%;
-            transform: translate(-50%, -50%); box-shadow: 0 4px 10px rgba(0,0,0,0.5); pointer-events: none;
-        }
-        .control-btn {
-            pointer-events: auto; background: rgba(34, 45, 58, 0.8); border: 2px solid var(--neon-pink);
-            border-radius: 50%; color: var(--moist-teal-light); font-weight: bold; display: flex;
-            justify-content: center; align-items: center; position: absolute; cursor: pointer;
-        }
+        #joystick-zone { position: absolute; bottom: 32px; left: 32px; width: 148px; height: 148px; background: rgba(52, 190, 205, 0.15); border: 3px solid rgba(170, 0, 255, 0.7); border-radius: 50%; pointer-events: auto; box-shadow: 0 0 25px rgba(170, 0, 255, 0.4); }
+        #joystick-knob { position: absolute; top: 50%; left: 50%; width: 64px; height: 64px; background: rgba(140, 237, 250, 0.9); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 20px var(--moist-teal-light); }
+        .control-btn { pointer-events: auto; background: rgba(34, 45, 58, 0.9); border: 3px solid var(--neon-pink); border-radius: 50%; color: var(--moist-teal-light); font-weight: bold; display: flex; justify-content: center; align-items: center; position: absolute; cursor: pointer; box-shadow: 0 0 20px var(--neon-pink); }
         .control-btn:active { background: var(--moist-teal-dark); color: white; transform: scale(0.9); }
-        #btn-boop { bottom: 60px; right: 40px; width: 80px; height: 80px; font-size: 16px; border-radius: 15px; background: rgba(52, 190, 205, 0.4); color: white; border-color: var(--neon-purple); }
-        #btn-boop:active { background: rgba(52, 190, 205, 0.9); }
-        #btn-dodge { bottom: 40px; right: 140px; width: 60px; height: 60px; font-size: 12px; border-radius: 15px; }
-        #btn-swap { bottom: 140px; right: 80px; width: 60px; height: 60px; font-size: 12px; border-radius: 15px; }
+        #btn-boop { bottom: 65px; right: 45px; width: 88px; height: 88px; font-size: 18px; border-radius: 18px; }
+        #btn-dodge { bottom: 45px; right: 155px; width: 66px; height: 66px; font-size: 13px; }
+        #btn-swap { bottom: 155px; right: 88px; width: 66px; height: 66px; font-size: 13px; }
+
+        #crosshair { position: fixed; top: 50%; left: 50%; width: 28px; height: 28px; transform: translate(-50%, -50%); pointer-events: none; z-index: 9999; display: none; }
+        #crosshair::before, #crosshair::after { content: ''; position: absolute; background: #8cedfa; box-shadow: 0 0 14px #8cedfa; }
+        #crosshair::before { top: 50%; left: 2px; width: 24px; height: 2px; transform: translateY(-50%); }
+        #crosshair::after { top: 2px; left: 50%; width: 2px; height: 24px; transform: translateX(-50%); }
+        #hit-marker { position: absolute; top: 50%; left: 50%; font-size: 34px; color: #ff1493; transform: translate(-50%, -50%) scale(0.6); opacity: 0; text-shadow: 0 0 18px #ff1493; pointer-events: none; z-index: 10000; }
+
+        #crt-overlay {
+            position: fixed; inset: 0; pointer-events: none; z-index: 5;
+            background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 4px);
+            box-shadow: inset 0 0 90px rgba(140, 237, 250, 0.18);
+            mix-blend-mode: multiply; opacity: 0.78;
+            animation: crt-flicker 0.12s infinite alternate;
+        }
+        @keyframes crt-flicker { 0% { opacity: 0.78; } 100% { opacity: 0.86; } }
+
+        #start-menu h1::after {
+            content: "💧"; display: inline-block; margin-left: 12px;
+            animation: drip 1.8s infinite ease-in-out;
+        }
+        @keyframes drip { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+        #damage-flash { position: fixed; inset: 0; background: red; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 0.1s; }
+
+        .mute-btn {
+            padding: 12px 28px;
+            font-size: 15px;
+            font-family: inherit;
+            background: rgba(20, 28, 42, 0.9);
+            color: white;
+            border: 3px solid var(--neon-purple);
+            border-radius: 9999px;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-purple);
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .mute-btn:hover {
+            box-shadow: 0 0 30px var(--neon-pink);
+            transform: scale(1.05);
+        }
+        .mute-btn:active {
+            transform: scale(0.95);
+        }
+        .mute-btn.muted {
+            border-color: #ff1493;
+            color: #ff1493;
+            text-shadow: 0 0 12px #ff1493;
+        }
+
+        /* Volume sliders - cyberpunk style */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 280px;
+        }
+        .volume-control span {
+            width: 68px;
+            color: #8cedfa;
+            font-size: 14px;
+            text-shadow: 0 0 8px #8cedfa;
+        }
+        input[type="range"] {
+            flex: 1;
+            accent-color: #8cedfa;
+            background: #222d3a;
+            border-radius: 9999px;
+            height: 8px;
+            box-shadow: 0 0 12px #8cedfa;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            background: #ff1493;
+            box-shadow: 0 0 12px #ff1493;
+        }
     </style>
 </head>
 <body>
 
-    <div id="start-menu">
-        <h1 style="color: var(--moist-teal-light); text-shadow: 0 0 15px var(--moist-teal-dark); text-align: center;">SFWFPS: Liquid Edition</h1>
+    <div id="start-menu" class="cyber-panel">
+        <h1 style="color: var(--moist-teal-light);">SFWFPS: Liquid Edition</h1>
         <button class="start-btn" id="start-btn">START DEMO</button>
         <p>Gamepad: Left Stick = Move • Right Stick = Look • RT = Fire • Bumpers/Y = Swap<br>Keyboard: WASD = Move • Q = Swap • Click = Fire • ESC = Pause</p>
+        
+        <div style="margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+            <button class="mute-btn" id="start-mute-music">MUSIC: ON</button>
+            <button class="mute-btn" id="start-mute-sfx">SFX: ON</button>
+        </div>
+
+        <div style="margin-top: 30px; width: 280px; display: flex; flex-direction: column; gap: 14px;">
+            <div class="volume-control">
+                <span>MUSIC</span>
+                <input type="range" id="start-music-vol" min="0" max="100" value="42">
+            </div>
+            <div class="volume-control">
+                <span>SFX</span>
+                <input type="range" id="start-sfx-vol" min="0" max="100" value="6">
+            </div>
+        </div>
     </div>
 
-    <div id="victory-menu">
+    <div id="victory-menu" class="cyber-panel">
         <h1 class="victory-title">GIANT MOISTURE DEFEATED!</h1>
-        <p id="final-score" style="color: var(--moist-teal); font-size: 28px; margin-bottom: 40px; text-shadow: 1px 1px 0px #000;">FINAL SCORE: 0</p>
+        <p id="final-score" style="color: var(--moist-teal); font-size: 28px; margin-bottom: 40px; text-shadow: 0 0 15px var(--neon-purple);">FINAL SCORE: 00000</p>
         <button class="start-btn" id="restart-btn">PLAY AGAIN</button>
     </div>
 
-    <div id="game-over-menu">
+    <div id="game-over-menu" class="cyber-panel">
         <h1 class="game-over-title">YOU DIED</h1>
-        <p id="game-over-score" style="color: var(--moist-teal); font-size: 28px; margin-bottom: 40px; text-shadow: 1px 1px 0px #000;">FINAL SCORE: 0</p>
+        <p id="game-over-score" style="color: var(--moist-teal); font-size: 28px; margin-bottom: 40px; text-shadow: 0 0 15px #ff1493;">FINAL SCORE: 00000</p>
         <button class="start-btn" id="game-over-restart-btn">TRY AGAIN</button>
     </div>
 
-    <div id="pause-menu">
-        <h1 style="color: var(--moist-teal-light); text-shadow: 0 0 20px var(--moist-teal); font-size: 52px; margin-bottom: 30px;">PAUSED</h1>
+    <div id="pause-menu" class="cyber-panel">
+        <h1 style="color: var(--moist-teal-light); font-size: 56px; margin-bottom: 30px;">PAUSED</h1>
         <button class="start-btn" id="resume-btn" style="margin-bottom: 25px;">RESUME</button>
         <button class="start-btn" id="pause-restart-btn">RESTART GAME</button>
-        <p>A/D now turn • Q = swap weapon<br>Charge Blaster &amp; BLAST on pedestals in Level 1</p>
+        
+        <div style="margin-top: 30px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+            <button class="mute-btn" id="pause-mute-music">MUSIC: ON</button>
+            <button class="mute-btn" id="pause-mute-sfx">SFX: ON</button>
+        </div>
+
+        <div style="margin-top: 30px; width: 280px; display: flex; flex-direction: column; gap: 14px;">
+            <div class="volume-control">
+                <span>MUSIC</span>
+                <input type="range" id="pause-music-vol" min="0" max="100" value="42">
+            </div>
+            <div class="volume-control">
+                <span>SFX</span>
+                <input type="range" id="pause-sfx-vol" min="0" max="100" value="6">
+            </div>
+        </div>
+        
+        <p style="margin-top: 40px;">A/D now turn • Q = swap weapon<br>4 procedural levels + boss</p>
     </div>
 
-    <div id="ui">HP: 125 | SCORE: 0 | BOOP: 120</div>
+    <div id="hud">
+        <div class="hud-row">
+            <div class="hp-group">
+                <div class="hp-label">LIQUID<br>INTEGRITY</div>
+                <div class="hp-bar-container">
+                    <div id="hp-fill"></div>
+                </div>
+                <div id="hp-num">125</div>
+            </div>
+            <div class="ammo-group">
+                <div id="weapon-name">BOOP</div>
+                <div class="ammo-count"><span id="ammo-current">120</span><span style="font-size:14px; color:#666;"> / </span><span id="ammo-max">120</span></div>
+            </div>
+            <div class="score-group">
+                SCORE <span id="score-num">00000</span>
+            </div>
+            <div class="level-group">
+                <div id="level-label">LEVEL</div>
+                <div id="level-num">01</div>
+            </div>
+            <div class="time-group">
+                <div id="time-label">TIME</div>
+                <div id="time-display">00:00</div>
+            </div>
+        </div>
+    </div>
+
     <div id="damage-flash"></div>
     
     <div id="boss-ui">
@@ -260,6 +462,12 @@
         <div class="control-btn" id="btn-dodge">DODGE</div>
         <div class="control-btn" id="btn-swap">SWAP</div>
     </div>
+
+    <div id="crosshair">
+        <div id="hit-marker">💧</div>
+    </div>
+
+    <div id="crt-overlay"></div>
     
     <script type="module">
         import * as THREE from 'three';
@@ -267,41 +475,85 @@
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
-        // -------------------------------------------------------------
-        // ANTI-FULLSCREEN DROP PROTOCOL
-        // This aggressively drops HTML focus from buttons so the Gamepad 
-        // doesn't simulate "Enter" presses which break fullscreen.
-        // -------------------------------------------------------------
         setInterval(() => {
-            if (document.activeElement && document.activeElement.tagName === 'BUTTON') {
-                document.activeElement.blur();
-            }
+            if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
         }, 100);
 
         let audioCtx;
-        function startBackgroundAudio() {
-            if (audioCtx) return; 
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Use raw.githubusercontent.com links so the browser can play them directly
+        let menuMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/before_the_gate_closes.mp3');
+        menuMusic.loop = true;
+        
+        let gameMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Trench_Runner.mp3');
+        gameMusic.loop = true;
+        
+        let currentMusic = null;
+        let musicMuted = false;
+        let sfxMuted = false;
+        let musicVolume = 0.42;
+        let sfxVolume = 0.06;
+        let gameStartTime = 0;
+
+        function playMusic(track) {
+            if (currentMusic && currentMusic !== track) {
+                currentMusic.pause();
+                currentMusic.currentTime = 0;
+            }
+            currentMusic = track;
+            if (!musicMuted) {
+                currentMusic.volume = musicVolume;
+                currentMusic.play().catch(() => {});
+            }
+        }
+
+        // Start menu music on the very first click anywhere on the page (browser autoplay policy workaround)
+        document.addEventListener('pointerdown', () => {
+            if (!currentMusic && document.getElementById('start-menu').style.display !== 'none') {
+                playMusic(menuMusic);
+            }
+        }, { once: true });
+
+        function toggleMusicMute() {
+            musicMuted = !musicMuted;
+            const txt = musicMuted ? 'MUSIC: OFF' : 'MUSIC: ON';
+            document.getElementById('start-mute-music').textContent = txt;
+            document.getElementById('pause-mute-music').textContent = txt;
+            
+            if (currentMusic) {
+                if (musicMuted) {
+                    currentMusic.pause();
+                } else {
+                    currentMusic.volume = musicVolume;
+                    currentMusic.play().catch(() => {});
+                }
+            }
+            // sync sliders
+            const target = musicMuted ? 0 : musicVolume * 100;
+            document.getElementById('start-music-vol').value = target;
+            document.getElementById('pause-music-vol').value = target;
+        }
+
+        function toggleSfxMute() {
+            sfxMuted = !sfxMuted;
+            const txt = sfxMuted ? 'SFX: OFF' : 'SFX: ON';
+            document.getElementById('start-mute-sfx').textContent = txt;
+            document.getElementById('pause-mute-sfx').textContent = txt;
+        }
+
+        function playShootSound(weapon) {
+            if (sfxMuted) return;
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
             const osc = audioCtx.createOscillator();
-            const filter = audioCtx.createBiquadFilter();
             const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(55, audioCtx.currentTime); 
-            const lfo = audioCtx.createOscillator();
-            lfo.type = 'sine';
-            lfo.frequency.value = 0.2; 
-            const lfoGain = audioCtx.createGain();
-            lfoGain.gain.value = 300;
-            lfo.connect(lfoGain);
-            lfoGain.connect(filter.detune);
-            filter.type = 'lowpass';
-            filter.frequency.value = 400; 
-            gain.gain.value = 0.3; 
-            osc.connect(filter);
-            filter.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            lfo.start();
+            osc.type = weapon === 0 ? 'sawtooth' : 'square';
+            osc.frequency.setValueAtTime(weapon === 0 ? 180 : (weapon === 1 ? 80 : 120), audioCtx.currentTime);
+            gain.gain.value = sfxVolume;   // adjustable SFX volume
+            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.12);
+            osc.connect(gain).connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
         }
 
         const UP_VECTOR = new THREE.Vector3(0, 1, 0);
@@ -316,34 +568,63 @@
         const maxAmmo = [120, 20, 15];
         let isCharging = false;
         let chargeStartTime = 0;
-        let isAnimating = false; 
-        
-        const uiDisplay = document.getElementById('ui');
+        let isAnimating = false;
+        let currentLevel = 1;
+
+        const crosshair = document.getElementById('crosshair');
+        const hitMarker = document.getElementById('hit-marker');
+
+        function showHitMarker() {
+            hitMarker.style.transition = 'none';
+            hitMarker.style.opacity = '1';
+            hitMarker.style.transform = 'translate(-50%, -50%) scale(1.6)';
+            setTimeout(() => {
+                hitMarker.style.transition = 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)';
+                hitMarker.style.opacity = '0';
+                hitMarker.style.transform = 'translate(-50%, -50%) scale(0.6)';
+            }, 60);
+        }
+
+        function getFormattedTime() {
+            if (!gameStartTime) return '00:00';
+            const elapsed = Math.floor((Date.now() - gameStartTime) / 1000);
+            const min = Math.floor(elapsed / 60);
+            const sec = elapsed % 60;
+            return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('time-display').textContent = getFormattedTime();
+        }
 
         function updateUI() {
-            let name;
-            if (currentWeapon === 0) name = 'BOOP';
-            else if (currentWeapon === 1) name = 'CHARGE';
-            else name = 'BLAST';
-            uiDisplay.innerText = `HP: ${playerHP} | SCORE: ${score} | ${name}: ${ammo[currentWeapon]}/${maxAmmo[currentWeapon]}`;
-            
+            const name = currentWeapon === 0 ? 'BOOP' : (currentWeapon === 1 ? 'CHARGE' : 'BLAST');
+            document.getElementById('hp-fill').style.width = `${(playerHP / 125) * 100}%`;
+            document.getElementById('hp-num').textContent = playerHP;
+            document.getElementById('weapon-name').textContent = name;
+            document.getElementById('ammo-current').textContent = ammo[currentWeapon];
+            document.getElementById('ammo-max').textContent = maxAmmo[currentWeapon];
+            document.getElementById('score-num').textContent = String(score).padStart(5, '0');
+            document.getElementById('level-num').textContent = String(currentLevel).padStart(2, '0');
+            updateTimerDisplay();
+
             const model = document.getElementById('weapon-wrapper');
             model.classList.remove('boop-weapon', 'charge-weapon', 'blast-weapon');
             if (currentWeapon === 0) model.classList.add('boop-weapon');
             else if (currentWeapon === 1) model.classList.add('charge-weapon');
-            else if (currentWeapon === 2) model.classList.add('blast-weapon');
+            else model.classList.add('blast-weapon');
         }
 
         function swapWeapon() {
-            let nextWeapon = (currentWeapon + 1) % 3;
-            if (ammo[nextWeapon] > 0 || nextWeapon === 0) { currentWeapon = nextWeapon; } 
-            else { nextWeapon = (nextWeapon + 1) % 3; if (ammo[nextWeapon] > 0 || nextWeapon === 0) { currentWeapon = nextWeapon; } }
+            let next = (currentWeapon + 1) % 3;
+            if (ammo[next] > 0 || next === 0) currentWeapon = next;
+            else { next = (next + 1) % 3; if (ammo[next] > 0 || next === 0) currentWeapon = next; }
             updateUI();
         }
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x344252); 
-        scene.fog = new THREE.Fog(0x344252, 4, 18); 
+        scene.fog = new THREE.Fog(0x344252, 3, 22);
 
         const muzzleLight = new THREE.PointLight(0xff1493, 0, 10);
         scene.add(muzzleLight);
@@ -353,83 +634,71 @@
         const renderer = new THREE.WebGLRenderer({ antialias: false });
         
         const renderScene = new RenderPass(scene, camera);
-        const bloomPass = new UnrealBloomPass(new THREE.Vector2(renderWidth, window.innerHeight), 1.2, 0.4, 0.85);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(renderWidth, window.innerHeight), 1.6, 0.3, 0.75);
         const composer = new EffectComposer(renderer);
         composer.addPass(renderScene);
         composer.addPass(bloomPass);
 
         function updateRendererSize() {
             const aspect = window.innerWidth / window.innerHeight;
-            camera.aspect = aspect;
-            camera.updateProjectionMatrix();
+            camera.aspect = aspect; camera.updateProjectionMatrix();
             const renderHeight = Math.floor(renderWidth / aspect);
             renderer.setSize(renderWidth, renderHeight, false); 
             composer.setSize(renderWidth, renderHeight);
         }
-
         document.body.appendChild(renderer.domElement);
         updateRendererSize();
         window.addEventListener('resize', updateRendererSize);
 
         const ps1VertexShader = `uniform float jitterLevel; varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; void main() { vUv = uv; vNormal = normalMatrix * normal; vec4 mvPosition = modelViewMatrix * vec4(position, 1.0); vec4 glPos = projectionMatrix * mvPosition; glPos.xyz = glPos.xyz / glPos.w; glPos.x = floor(glPos.x * jitterLevel) / jitterLevel; glPos.y = floor(glPos.y * jitterLevel) / jitterLevel; glPos.xyz *= glPos.w; gl_Position = glPos; vWorldPosition = modelMatrix * vec4(position, 1.0); }`;
-        const ps1FragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColor; uniform float alpha; void main() { vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); float lighting = clamp(dProd + 0.75, 0.0, 1.0); float checker = mod(floor(vWorldPosition.x * 0.5) + floor(vWorldPosition.z * 0.5) + floor(vWorldPosition.y * 0.5), 2.0); vec3 finalColor = mix(baseColor, baseColor * 0.7, checker); gl_FragColor = vec4(finalColor * lighting, alpha); }`;
         
-        const wallFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColorBottom; uniform vec3 baseColorTop; uniform float alpha; uniform float time; void main() { 
+        const wallFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; 
+        uniform vec3 baseColorBottom; uniform vec3 baseColorTop; uniform float alpha; uniform float time;
+        uniform vec3 topTrimColor; uniform vec3 bottomTrimColor;
+        void main() { 
             vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); 
             float lighting = clamp(dProd + 0.75, 0.0, 1.0); 
             float wave = sin(vWorldPosition.x * 2.0 + time * 1.5) * cos(vWorldPosition.z * 2.0 + time) * sin(vWorldPosition.y * 2.0 + time * 0.8); 
             float checker = mod(floor((vWorldPosition.x + wave * 0.25) * 1.5) + floor((vWorldPosition.z + wave * 0.25) * 1.5) + floor((vWorldPosition.y + wave * 0.25) * 1.5), 2.0); 
-            
-            float wallHeightClamp = clamp((vWorldPosition.y + 0.5) / 2.0, 0.0, 1.0); vec3 wallBaseColor = mix(baseColorBottom, baseColorTop, wallHeightClamp); vec3 finalColor = mix(wallBaseColor, wallBaseColor * 0.6, checker); finalColor += vec3(0.55, 0.93, 0.98) * (max(0.0, sin(vWorldPosition.x * 5.0 - time * 2.0) * cos(vWorldPosition.y * 5.0 + time) * sin(vWorldPosition.z * 5.0 + time * 1.5)) * 0.4); 
-
+            float wallHeightClamp = clamp((vWorldPosition.y + 0.5) / 2.0, 0.0, 1.0); 
+            vec3 wallBaseColor = mix(baseColorBottom, baseColorTop, wallHeightClamp); 
+            vec3 finalColor = mix(wallBaseColor, wallBaseColor * 0.6, checker); 
+            finalColor += vec3(0.55, 0.93, 0.98) * (max(0.0, sin(vWorldPosition.x * 5.0 - time * 2.0) * cos(vWorldPosition.y * 5.0 + time) * sin(vWorldPosition.z * 5.0 + time * 1.5)) * 0.4); 
             float topTrim = smoothstep(2.7, 2.95, vWorldPosition.y); 
             float bottomTrim = 1.0 - smoothstep(-0.95, -0.7, vWorldPosition.y); 
-            
-            vec3 neonPink = vec3(1.0, 0.08, 0.58);
-            vec3 neonPurple = vec3(0.66, 0.0, 1.0);
-            
             float pulse = 0.8 + 0.2 * sin(time * 3.0);
-            finalColor = mix(finalColor, neonPink, topTrim * pulse);
-            finalColor = mix(finalColor, neonPurple, bottomTrim * pulse);
-
+            finalColor = mix(finalColor, topTrimColor, topTrim * pulse);
+            finalColor = mix(finalColor, bottomTrimColor, bottomTrim * pulse);
             gl_FragColor = vec4(finalColor * lighting, alpha); 
         }`;
 
         const floorFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColor; uniform float alpha; uniform float time; void main() { vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); float lighting = clamp(dProd + 0.75, 0.0, 1.0); float wave = sin(vWorldPosition.x * 2.0 + time * 1.5) * cos(vWorldPosition.z * 2.0 + time) * sin(vWorldPosition.y * 2.0 + time * 0.8); float checker = mod(floor((vWorldPosition.x + wave * 0.25) * 1.5) + floor((vWorldPosition.z + wave * 0.25) * 1.5) + floor((vWorldPosition.y + wave * 0.25) * 1.5), 2.0); float caustic = max(0.0, sin(vWorldPosition.x * 5.0 - time * 2.0) * cos(vWorldPosition.y * 5.0 + time) * sin(vWorldPosition.z * 5.0 + time * 1.5)); vec3 finalColor = mix(baseColor, baseColor * 0.6, checker); finalColor += vec3(0.55, 0.93, 0.98) * caustic * 0.6; gl_FragColor = vec4(finalColor * lighting, alpha); }`;
-
         const portalFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform float time; void main() { vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); float lighting = clamp(dProd + 0.75, 0.0, 1.0); vec3 color1 = vec3(0.55, 0.93, 0.98); vec3 color2 = vec3(0.20, 0.75, 0.80); vec3 color3 = vec3(1.0, 0.08, 0.58); vec3 color4 = vec3(0.66, 0.0, 1.0); float posFactor = (vWorldPosition.x * 0.25) + (vWorldPosition.y * 0.5) + (sin(vWorldPosition.z * 0.2 + time) * 0.2); float posClamped = mod(posFactor, 1.0); vec3 flowColor; if (posClamped < 0.33) flowColor = mix(color1, color2, posClamped * 3.0); else if (posClamped < 0.66) flowColor = mix(color2, color3, (posClamped - 0.33) * 3.0); else flowColor = mix(color3, color4, (posClamped - 0.66) * 3.0); gl_FragColor = vec4(flowColor * lighting, 0.95); }`;
-
-        const enemyFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColor; uniform float alpha; uniform float time; 
-        void main() { 
-            vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); 
-            float lighting = clamp(dProd + 0.75, 0.0, 1.0); 
-            float checker = mod(floor(vWorldPosition.x * 4.0) + floor(vWorldPosition.z * 4.0) + floor(vWorldPosition.y * 4.0), 2.0); 
-            vec3 finalColor = mix(baseColor, baseColor * 0.7, checker); 
-            
-            float scanline = sin(vWorldPosition.y * 6.0 - time * 4.0);
-            vec3 neonPink = vec3(1.0, 0.08, 0.58);
-            vec3 neonPurple = vec3(0.66, 0.0, 1.0);
-            vec3 trimColor = mix(neonPurple, neonPink, (sin(time * 2.0) + 1.0) * 0.5);
-            
-            finalColor = mix(finalColor, trimColor, smoothstep(0.85, 1.0, scanline));
-
-            gl_FragColor = vec4(finalColor * lighting, alpha); 
-        }`;
-
+        const enemyFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColor; uniform float alpha; uniform float time; void main() { vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); float lighting = clamp(dProd + 0.75, 0.0, 1.0); float checker = mod(floor(vWorldPosition.x * 4.0) + floor(vWorldPosition.z * 4.0) + floor(vWorldPosition.y * 4.0), 2.0); vec3 finalColor = mix(baseColor, baseColor * 0.7, checker); float scanline = sin(vWorldPosition.y * 6.0 - time * 4.0); vec3 neonPink = vec3(1.0, 0.08, 0.58); vec3 neonPurple = vec3(0.66, 0.0, 1.0); vec3 trimColor = mix(neonPurple, neonPink, (sin(time * 2.0) + 1.0) * 0.5); finalColor = mix(finalColor, trimColor, smoothstep(0.85, 1.0, scanline)); gl_FragColor = vec4(finalColor * lighting, alpha); }`;
         const oceanFragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform float time; void main() { float wave1 = sin(vWorldPosition.x * 0.5 + time * 0.8) * cos(vWorldPosition.z * 0.5 - time * 0.5); float wave2 = sin(vWorldPosition.x * 1.2 - time * 1.2) * cos(vWorldPosition.z * 0.8 + time * 0.9); float totalWave = (wave1 + wave2) * 0.5; vec3 deepColor = vec3(0.13, 0.18, 0.23); vec3 shallowColor = vec3(0.11, 0.59, 0.65); vec3 highlight = vec3(0.55, 0.93, 0.98); vec3 finalColor = mix(deepColor, shallowColor, totalWave + 0.5); if (totalWave > 0.3) finalColor = mix(finalColor, highlight, (totalWave - 0.3) * 2.0); gl_FragColor = vec4(finalColor, 0.95); }`;
+        const ps1FragmentShader = `varying vec2 vUv; varying vec3 vNormal; varying vec4 vWorldPosition; uniform vec3 baseColor; uniform float alpha; void main() { vec3 light = normalize(vec3(0.5, 1.0, 0.5)); float dProd = max(0.0, dot(vNormal, light)); float lighting = clamp(dProd + 0.75, 0.0, 1.0); float checker = mod(floor(vWorldPosition.x * 0.5) + floor(vWorldPosition.z * 0.5) + floor(vWorldPosition.y * 0.5), 2.0); vec3 finalColor = mix(baseColor, baseColor * 0.7, checker); gl_FragColor = vec4(finalColor * lighting, alpha); }`;
 
-        const wallMaterial = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: wallFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColorBottom: { value: new THREE.Color(0x222d3a) }, baseColorTop: { value: new THREE.Color(0x34becd) }, alpha: {value: 1.0}, time: {value: 0.0} } });
+        const wallMaterial = new THREE.ShaderMaterial({ 
+            vertexShader: ps1VertexShader, 
+            fragmentShader: wallFragmentShader, 
+            uniforms: { 
+                jitterLevel: { value: 160.0 }, 
+                baseColorBottom: { value: new THREE.Color(0x222d3a) }, 
+                baseColorTop: { value: new THREE.Color(0x34becd) }, 
+                alpha: {value: 1.0}, time: {value: 0.0},
+                topTrimColor: { value: new THREE.Color(0xff1493) },
+                bottomTrimColor: { value: new THREE.Color(0xaa00ff) }
+            } 
+        });
+
         const floorMaterial = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: floorFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0x1c96a5) }, alpha: {value: 1.0}, time: {value: 0.0} } });
         const oceanCeilingMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: oceanFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, time: { value: 0.0 } }, side: THREE.DoubleSide });
-        
         const sharedWaterMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: ps1FragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0x8cedfa) }, alpha: {value: 0.6} }, transparent: true, depthWrite: false });
         const boopProjMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: ps1FragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0xff1493) }, alpha: {value: 0.8} }, transparent: true, depthWrite: false }); 
         const chargeProjMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: ps1FragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0x1c96a5) }, alpha: {value: 0.9} }, transparent: true, depthWrite: false });
         const blastProjMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: ps1FragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0xaa00ff) }, alpha: {value: 0.9} }, transparent: true, depthWrite: false }); 
-
         const enemyWaterMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: enemyFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0x1c96a5) }, alpha: {value: 0.8}, time: {value: 0.0} }, transparent: true, depthWrite: false });
         const fastEnemyWaterMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: enemyFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0x8cedfa) }, alpha: {value: 0.75}, time: {value: 0.0} }, transparent: true, depthWrite: false });
-        
         const portalMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: portalFragmentShader, uniforms: { jitterLevel: { value: 160.0 }, time: { value: 0.0 } }, transparent: true, depthWrite: false });
         const faceMat = new THREE.ShaderMaterial({ vertexShader: ps1VertexShader, fragmentShader: ps1FragmentShader, uniforms: { jitterLevel: { value: 160.0 }, baseColor: { value: new THREE.Color(0xff1493) }, alpha: {value: 1.0} } }); 
         
@@ -441,7 +710,6 @@
         const boopProjGeo = new THREE.BoxGeometry(0.06, 0.06, 0.25, 2, 2, 2);
         const chargeProjGeo = new THREE.SphereGeometry(0.18, 4, 4); 
         const blastProjGeo = new THREE.TetrahedronGeometry(0.22, 0); 
-        
         const splashGeo = new THREE.BoxGeometry(0.04, 0.04, 0.04, 2, 2, 2);
         const bottleGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.5, 8);
         const bottleCapGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.1, 8);
@@ -482,7 +750,7 @@
                 const cap = new THREE.Mesh(bottleCapGeo, faceMat); cap.position.y = 0.3; mesh.add(cap);
             }
 
-            const safeX = cellX * 2; const safeZ = cellZ * 2; mesh.position.set(safeX, -0.6, safeZ);
+            const safeX = cellX * cellSize; const safeZ = cellZ * cellSize; mesh.position.set(safeX, -0.6, safeZ);
             if (type === 'weapon' || type === 'weapon2') {
                 const pedestal = new THREE.Mesh(pedestalGeo, new THREE.MeshBasicMaterial({color: 0x222d3a})); pedestal.position.y = -0.3; mesh.add(pedestal); mesh.position.y = -0.6;
                 const orbMat = new THREE.MeshBasicMaterial({color: type === 'weapon' ? 0x1c96a5 : 0xaa00ff}); const orb = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), orbMat); orb.position.set(0, 0.42, 0.15); mesh.add(orb);
@@ -508,7 +776,7 @@
 
         const enemies = [];
         function spawnEnemy(gridX, gridZ, isBoss = false, isFast = false) {
-            const mat = isFast ? fastEnemyWaterMat : enemyWaterMat; let mesh = createWaterHumanoid(mat); mesh.position.set(gridX * 2, -0.5, gridZ * 2); 
+            const mat = isFast ? fastEnemyWaterMat : enemyWaterMat; let mesh = createWaterHumanoid(mat); mesh.position.set(gridX * cellSize, -0.5, gridZ * cellSize); 
             if (isBoss) { mesh.scale.set(2.0, 2.0, 2.0); mesh.position.y = -0.1; scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 75, maxHp: 75, isBoss: true, isFast: false, lastShot: 0, speed: 0.035, floatOffset: Math.random() * Math.PI * 2 }); } 
             else if (isFast) { mesh.scale.set(0.55, 0.55, 0.55); scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 3, maxHp: 3, isBoss: false, isFast: true, lastShot: 0, speed: 0.048, floatOffset: Math.random() * Math.PI * 2 }); } 
             else { scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 5, maxHp: 5, isBoss: false, isFast: false, lastShot: 0, speed: 0.02, floatOffset: Math.random() * Math.PI * 2 }); }
@@ -516,12 +784,48 @@
 
         function faceNearestEnemy() { let nearest = null; let minDistSq = Infinity; for (let e of enemies) { if (!e.active) continue; let dx = e.mesh.position.x - camera.position.x; let dz = e.mesh.position.z - camera.position.z; let distSq = (dx*dx + dz*dz); if (distSq < minDistSq) { minDistSq = distSq; nearest = e; } } if (nearest) playerAngle = Math.atan2(camera.position.x - nearest.mesh.position.x, camera.position.z - nearest.mesh.position.z); }
 
-        const level1Map = [[1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,1,0,0,1],[1,0,1,1,1,0,1,0,1,1],[1,0,0,0,1,0,0,0,0,1],[1,1,1,0,1,1,1,1,0,1],[1,0,0,0,0,0,0,1,0,1],[1,0,1,1,1,1,0,1,0,1],[1,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1]];
-        const level2Map = [[1,1,1,1,1,1,1,1,1,1],[1,0,0,0,1,0,0,0,0,1],[1,0,1,0,1,0,1,1,0,1],[1,0,1,0,0,0,0,1,0,1],[1,0,1,1,1,1,0,1,0,1],[1,0,0,0,0,1,0,0,0,1],[1,1,1,0,1,1,1,0,1,1],[1,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1]];
-        const bossMapData = [[1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1]];
-        
-        const cellSize = 2; const wallGeo = new THREE.BoxGeometry(cellSize, cellSize * 2.5, cellSize, 4, 4, 4); const floorGeo = new THREE.PlaneGeometry(cellSize, cellSize, 4, 4); floorGeo.rotateX(-Math.PI / 2); const ceilingGeo = new THREE.PlaneGeometry(cellSize, cellSize, 4, 4); ceilingGeo.rotateX(Math.PI / 2); 
-        const mapGroup = new THREE.Group(); scene.add(mapGroup); let currentMap = []; let currentLevel = 1; let portalActive = false;
+        const cellSize = 2;
+        const wallGeo = new THREE.BoxGeometry(cellSize, cellSize * 2.5, cellSize, 4, 4, 4); 
+        const floorGeo = new THREE.PlaneGeometry(cellSize, cellSize, 4, 4); floorGeo.rotateX(-Math.PI / 2); 
+        const ceilingGeo = new THREE.PlaneGeometry(cellSize, cellSize, 4, 4); ceilingGeo.rotateX(Math.PI / 2); 
+        const mapGroup = new THREE.Group(); scene.add(mapGroup); 
+        let currentMap = []; let portalActive = false;
+
+        function generateProceduralMap() {
+            const cols = 10; const rows = 9;
+            let map = Array.from({length: rows}, () => Array(cols).fill(1));
+            const visited = Array.from({length: rows}, () => Array(cols).fill(false));
+            const directions = [[0, -2], [0, 2], [-2, 0], [2, 0]];
+
+            function carve(x, z) {
+                if (x < 1 || x >= cols-1 || z < 1 || z >= rows-1) return;
+                visited[z][x] = true;
+                map[z][x] = 0;
+                let dirs = [...directions].sort(() => Math.random() - 0.5);
+                for (let [dx, dz] of dirs) {
+                    const nx = x + dx, nz = z + dz;
+                    if (nx >= 1 && nx < cols-1 && nz >= 1 && nz < rows-1 && !visited[nz][nx]) {
+                        map[z + dz/2][x + dx/2] = 0;
+                        carve(nx, nz);
+                    }
+                }
+            }
+            carve(1, 1);
+            map[rows-2][cols-2] = 0;
+            map[rows-2][cols-3] = 0;
+            return map;
+        }
+
+        function updateWallTrim(level) {
+            let top, bottom;
+            if (level === 1) { top = new THREE.Color(0xff1493); bottom = new THREE.Color(0xaa00ff); }
+            else if (level === 2) { top = new THREE.Color(0x00ffcc); bottom = new THREE.Color(0xff00aa); }
+            else if (level === 3) { top = new THREE.Color(0x00aaff); bottom = new THREE.Color(0xffaa00); }
+            else if (level === 4) { top = new THREE.Color(0xff8800); bottom = new THREE.Color(0x00ff88); }
+            else { top = new THREE.Color(0xff3300); bottom = new THREE.Color(0xcc00ff); }
+            wallMaterial.uniforms.topTrimColor.value = top;
+            wallMaterial.uniforms.bottomTrimColor.value = bottom;
+        }
 
         function buildMap(mapData) {
             while(mapGroup.children.length > 0) mapGroup.remove(mapGroup.children[0]);
@@ -529,62 +833,184 @@
             for (let z = 0; z < currentMap.length; z++) { for (let x = 0; x < currentMap[z].length; x++) { const floor = new THREE.Mesh(floorGeo, floorMaterial); floor.position.set(x * cellSize, -cellSize / 2, z * cellSize); mapGroup.add(floor); const ceiling = new THREE.Mesh(ceilingGeo, oceanCeilingMat); ceiling.position.set(x * cellSize, cellSize * 1.5, z * cellSize); mapGroup.add(ceiling); if (currentMap[z][x] === 1) { const wall = new THREE.Mesh(wallGeo, wallMaterial); wall.position.set(x * cellSize, cellSize * 0.5, z * cellSize); mapGroup.add(wall); } } }
         }
 
-        function startLevel1() { currentLevel = 1; buildMap(level1Map); camera.position.set(cellSize * 1, 0, cellSize * 1); enemies.length = 0; spawnEnemy(3, 1); spawnEnemy(7, 1, false, true); spawnEnemy(8, 6); spawnEnemy(3, 5, false, true); spawnEnemy(5, 7); spawnItem(1, 1, 'health'); spawnItem(7, 1, 'ammo'); spawnItem(5, 3, 'weapon2'); spawnItem(7, 7, 'health'); spawnItem(3, 4, 'ammo'); spawnItem(8, 4, 'health'); spawnItem(2, 7, 'weapon'); spawnItem(5, 7, 'ammo'); faceNearestEnemy(); }
-        function startLevel2() { portalActive = false; portalMesh.visible = false; currentLevel = 2; buildMap(level2Map); camera.position.set(cellSize * 1, 0, cellSize * 1); enemies.length = 0; spawnEnemy(2, 1); spawnEnemy(8, 1, false, true); spawnEnemy(5, 2); spawnEnemy(8, 5, false, true); spawnEnemy(3, 7); spawnEnemy(7, 7, false, true); spawnItem(2, 1, 'health'); spawnItem(7, 1, 'ammo'); spawnItem(2, 7, 'weapon'); spawnItem(7, 7, 'health'); spawnItem(1, 4, 'ammo'); spawnItem(8, 4, 'health'); spawnItem(5, 1, 'weapon'); spawnItem(5, 7, 'ammo'); faceNearestEnemy(); }
-        function startBossLevel() { portalActive = false; portalMesh.visible = false; currentLevel = 3; buildMap(bossMapData); camera.position.set(cellSize * 5.5, 0, cellSize * 8); enemies.length = 0; spawnEnemy(5.5, 3, true); spawnItem(2, 2, 'ammo'); spawnItem(10, 2, 'health'); spawnItem(2, 8, 'weapon'); spawnItem(10, 8, 'ammo'); spawnItem(1, 5, 'health'); spawnItem(9, 5, 'ammo'); spawnItem(4, 3, 'weapon'); spawnItem(7, 7, 'health'); faceNearestEnemy(); document.getElementById('boss-ui').style.display = 'block'; document.getElementById('boss-bar-fill').style.width = '100%'; document.getElementById('boss-bar-fill').style.background = 'var(--moist-gradient)'; }
-        
+        function placeProceduralContent(mapData, level) {
+            const floors = [];
+            for (let z = 0; z < mapData.length; z++) for (let x = 0; x < mapData[z].length; x++) if (mapData[z][x] === 0) floors.push({x, z});
+            floors.sort(() => Math.random() - 0.5);
+            camera.position.set(cellSize * 1, 0, cellSize * 1);
+            const enemyCount = 3 + level * 2;
+            for (let i = 0; i < Math.min(enemyCount, floors.length - 8); i++) {
+                const pos = floors[i + 8];
+                const isFast = level >= 3 && Math.random() > 0.6;
+                spawnEnemy(pos.x, pos.z, false, isFast);
+            }
+            let idx = enemyCount + 8;
+            const types = ['health', 'ammo', 'ammo', 'weapon', 'weapon2'];
+            for (let i = 0; i < 10 + level * 2; i++) {
+                if (idx >= floors.length) break;
+                const pos = floors[idx++];
+                const type = types[Math.floor(Math.random() * types.length)];
+                spawnItem(pos.x, pos.z, type);
+            }
+            spawnItem(2, 1, 'health');
+            spawnItem(3, 2, 'ammo');
+            spawnItem(1, 3, 'health');
+        }
+
+        function startLevel(level) {
+            currentLevel = level;
+            document.getElementById('boss-ui').style.display = 'none';
+            if (level >= 5) {
+                currentLevel = 5;
+                buildMap([[1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1]]);
+                updateWallTrim(5);
+                camera.position.set(cellSize * 5.5, 0, cellSize * 8);
+                enemies.length = 0;
+                spawnEnemy(5.5, 3, true);
+                spawnItem(2, 2, 'ammo'); spawnItem(10, 2, 'health'); spawnItem(2, 8, 'weapon'); spawnItem(10, 8, 'ammo');
+                spawnItem(1, 5, 'health'); spawnItem(9, 5, 'ammo'); spawnItem(4, 3, 'weapon'); spawnItem(7, 7, 'health');
+                faceNearestEnemy();
+                document.getElementById('boss-ui').style.display = 'block';
+                document.getElementById('boss-bar-fill').style.width = '100%';
+                updateUI();
+                return;
+            }
+            const mapData = generateProceduralMap();
+            buildMap(mapData);
+            updateWallTrim(level);
+            placeProceduralContent(mapData, level);
+            faceNearestEnemy();
+            updateUI();
+        }
+
         function resetGame() { 
-            playerHP = 125; score = 0; currentWeapon = 0; ammo = [120, 20, 15]; isCharging = false; updateUI(); 
+            playerHP = 125; score = 0; currentWeapon = 0; ammo = [120, 20, 15]; isCharging = false; 
+            gameStartTime = Date.now();
+            updateUI(); 
             document.getElementById('victory-menu').style.display = 'none'; 
             document.getElementById('game-over-menu').style.display = 'none'; 
             document.getElementById('pause-menu').style.display = 'none'; 
             document.getElementById('boss-ui').style.display = 'none'; 
-            document.getElementById('ui').style.display = 'block'; 
+            document.getElementById('hud').style.display = 'block'; 
             document.getElementById('minimap').style.display = 'block'; 
             document.getElementById('touch-controls').style.display = 'block'; 
             document.getElementById('weapon-wrapper').style.display = 'block'; 
             document.getElementById('pause-btn').style.display = 'flex'; 
+            crosshair.style.display = 'block';
+            if (document.pointerLockElement) document.exitPointerLock();
             paused = false; portalActive = false; portalMesh.visible = false; 
-            startLevel1(); 
+            startLevel(1); 
             for(let p of projPool) { p.active = false; p.mesh.visible = false; } 
             for(let p of enemyProjPool) { p.active = false; p.mesh.visible = false; } 
             for(let p of splashPool) { p.active = false; p.mesh.visible = false; } 
         }
 
+        function setupMuteButtons() {
+            const musicBtns = [
+                document.getElementById('start-mute-music'),
+                document.getElementById('pause-mute-music')
+            ];
+            const sfxBtns = [
+                document.getElementById('start-mute-sfx'),
+                document.getElementById('pause-mute-sfx')
+            ];
+
+            musicBtns.forEach(btn => btn.addEventListener('click', toggleMusicMute));
+            sfxBtns.forEach(btn => btn.addEventListener('click', toggleSfxMute));
+        }
+
+        function setupVolumeSliders() {
+            const musicSliders = [
+                document.getElementById('start-music-vol'),
+                document.getElementById('pause-music-vol')
+            ];
+            const sfxSliders = [
+                document.getElementById('start-sfx-vol'),
+                document.getElementById('pause-sfx-vol')
+            ];
+
+            musicSliders.forEach(slider => {
+                slider.value = musicVolume * 100;
+                slider.addEventListener('input', () => {
+                    musicVolume = parseFloat(slider.value) / 100;
+                    musicSliders.forEach(s => s.value = slider.value); // sync both menus
+                    if (currentMusic && !musicMuted) currentMusic.volume = musicVolume;
+                });
+            });
+
+            sfxSliders.forEach(slider => {
+                slider.value = sfxVolume * 100;
+                slider.addEventListener('input', () => {
+                    sfxVolume = parseFloat(slider.value) / 100;
+                    sfxSliders.forEach(s => s.value = slider.value); // sync both menus
+                });
+            });
+        }
+
         document.getElementById('restart-btn').addEventListener('click', () => {
             resetGame(); 
-            document.getElementById('ui').style.display = 'none'; 
+            document.getElementById('hud').style.display = 'none'; 
             document.getElementById('minimap').style.display = 'none'; 
             document.getElementById('touch-controls').style.display = 'none'; 
             document.getElementById('weapon-wrapper').style.display = 'none'; 
             document.getElementById('pause-btn').style.display = 'none';
+            crosshair.style.display = 'none';
             document.getElementById('start-menu').style.display = 'flex';
+            
+            // Switch back to menu music
+            playMusic(menuMusic);
             paused = true;
         });
 
-        document.getElementById('game-over-restart-btn').addEventListener('click', resetGame); 
-        document.getElementById('pause-restart-btn').addEventListener('click', () => { paused = false; resetGame(); });
+        document.getElementById('game-over-restart-btn').addEventListener('click', () => {
+            if (document.pointerLockElement) document.exitPointerLock();
+            resetGame();
+            playMusic(gameMusic);
+        }); 
+
+        document.getElementById('pause-restart-btn').addEventListener('click', () => { 
+            paused = false; 
+            resetGame(); 
+            playMusic(gameMusic);
+        });
         
         function togglePause() { 
             paused = !paused; 
             document.getElementById('pause-menu').style.display = paused ? 'flex' : 'none'; 
+            crosshair.style.display = paused ? 'none' : 'block';
         } 
         
         document.getElementById('resume-btn').addEventListener('click', () => { 
             paused = false; document.getElementById('pause-menu').style.display = 'none'; 
+            crosshair.style.display = 'block';
         }); 
         
         document.getElementById('pause-btn').addEventListener('click', togglePause);
 
+        let shakeAmount = 0;
+        function screenShake(intensity = 12) { shakeAmount = intensity; }
+        function applyShake() {
+            if (shakeAmount > 0) {
+                const shakeX = (Math.random() - 0.5) * shakeAmount * 0.9;
+                const shakeY = (Math.random() - 0.5) * shakeAmount * 0.9;
+                renderer.domElement.style.transform = `translate(${shakeX}px, ${shakeY}px)`;
+                shakeAmount *= 0.82;
+            } else {
+                renderer.domElement.style.transform = 'none';
+            }
+        }
+
         function fireBoop() { 
-            const weaponWrapper = document.getElementById('weapon-wrapper'); weaponWrapper.classList.remove('firing'); void weaponWrapper.offsetWidth; weaponWrapper.classList.add('firing'); 
+            const wrapper = document.getElementById('weapon-wrapper'); wrapper.classList.remove('firing'); void wrapper.offsetWidth; wrapper.classList.add('firing'); 
             muzzleLight.position.copy(camera.position); muzzleLight.color.setHex(0xff1493); muzzleLight.intensity = 8.0;
+            playShootSound(0); screenShake(12);
             const dir = new THREE.Vector3(Math.sin(playerAngle), 0, Math.cos(playerAngle)).normalize(); 
             for(let i = 0; i < 15; i++) { let p = projPool[projIdx]; projIdx = (projIdx + 1) % MAX_PROJ; p.mesh.geometry = boopProjGeo; p.mesh.material = boopProjMat; p.active = true; p.mesh.visible = true; p.mesh.scale.setScalar(1.0 + Math.random() * 0.5); p.mesh.position.copy(camera.position); p.mesh.position.y -= 0.3; p.mesh.quaternion.copy(camera.quaternion); const speed = 0.35 + Math.random() * 0.25; p.velocity.set(-dir.x * speed + (Math.random()-0.5)*0.12, (Math.random()-0.2)*0.1, -dir.z * speed + (Math.random()-0.5)*0.12); p.life = 20 + Math.random() * 25; p.damage = 1.21; } 
         }
         function fireChargeBlaster(chargeLevel, wpn = currentWeapon) { 
-            const weaponWrapper = document.getElementById('weapon-wrapper'); weaponWrapper.classList.remove('firing'); void weaponWrapper.offsetWidth; weaponWrapper.classList.add('firing'); 
+            const wrapper = document.getElementById('weapon-wrapper'); wrapper.classList.remove('firing'); void wrapper.offsetWidth; wrapper.classList.add('firing'); 
             muzzleLight.position.copy(camera.position); muzzleLight.color.setHex(wpn === 1 ? 0x1c96a5 : 0xaa00ff); muzzleLight.intensity = wpn === 1 ? 10.0 : 15.0;
+            playShootSound(wpn); screenShake(wpn === 1 ? 14 : 18);
             const dir = new THREE.Vector3(Math.sin(playerAngle), 0, Math.cos(playerAngle)).normalize(); let p = projPool[projIdx]; projIdx = (projIdx + 1) % MAX_PROJ; if (wpn === 1) { p.mesh.geometry = chargeProjGeo; p.mesh.material = chargeProjMat; } else { p.mesh.geometry = blastProjGeo; p.mesh.material = blastProjMat; } p.active = true; p.mesh.visible = true; p.mesh.position.copy(camera.position); p.mesh.position.y -= 0.25; const scaleMult = wpn === 1 ? 0.65 : 0.85; const speedMult = wpn === 1 ? 0.35 : 0.50; const dmgBase = wpn === 1 ? 4.4 : 7.0; const dmgMult = wpn === 1 ? 8.8 : 13.2; p.mesh.scale.setScalar(0.45 + chargeLevel * scaleMult); p.mesh.quaternion.copy(camera.quaternion); const speed = 0.55 + chargeLevel * speedMult; p.velocity.set(-dir.x * speed, 0.12 + chargeLevel * 0.1, -dir.z * speed); p.life = wpn === 1 ? 35 : 45; p.damage = dmgBase + chargeLevel * dmgMult; 
         }
         function startFire() { if (paused) return; if (currentWeapon === 0) { if (ammo[0] > 0) { fireBoop(); ammo[0] = Math.max(0, ammo[0] - 3); updateUI(); } } else if ((currentWeapon === 1 || currentWeapon === 2) && ammo[currentWeapon] > 0 && !isCharging) { isCharging = true; chargeStartTime = Date.now(); document.getElementById('weapon-wrapper').classList.add('charging'); } }
@@ -598,9 +1024,7 @@
         
         const keys = {}; 
         window.addEventListener('keydown', e => { 
-            if (e.key === 'Escape') {
-                if (!paused && playerHP > 0 && document.getElementById('start-menu').style.display === 'none') togglePause();
-            }
+            if (e.key === 'Escape') { if (!paused && playerHP > 0 && document.getElementById('start-menu').style.display === 'none') togglePause(); }
             keys[e.key.toLowerCase()] = true; 
             if (e.key.toLowerCase() === 'q' && !paused) swapWeapon(); 
             if (e.key === ' ' && !paused) { e.preventDefault(); startFire(); } 
@@ -610,23 +1034,29 @@
         let isPointerLocked = false; renderer.domElement.addEventListener('click', () => { if (document.pointerLockElement !== renderer.domElement) renderer.domElement.requestPointerLock().catch(() => {}); }); document.addEventListener('pointerlockchange', () => { isPointerLocked = document.pointerLockElement === renderer.domElement; }); document.addEventListener('mousemove', e => { if (isPointerLocked && !paused) playerAngle -= e.movementX * 0.0035; }); renderer.domElement.addEventListener('mousedown', e => { if (isPointerLocked && e.button === 0 && !paused) startFire(); }); window.addEventListener('mouseup', () => { if (isPointerLocked && !paused) endFire(); });
 
         document.getElementById('start-btn').addEventListener('click', () => { 
-            startBackgroundAudio(); 
+            gameStartTime = Date.now();
+            
+            // Switch to the action track
+            playMusic(gameMusic); 
+            
             document.getElementById('start-menu').style.display = 'none'; 
-            document.getElementById('ui').style.display = 'block'; 
+            document.getElementById('hud').style.display = 'block'; 
             document.getElementById('minimap').style.display = 'block'; 
             document.getElementById('touch-controls').style.display = 'block'; 
             document.getElementById('weapon-wrapper').style.display = 'block'; 
             document.getElementById('pause-btn').style.display = 'flex'; 
+            crosshair.style.display = 'block';
             
             paused = false; 
             updateUI(); 
             
-            if (!isAnimating) {
-                animate(); 
-                isAnimating = true;
-            }
+            if (!isAnimating) { animate(); isAnimating = true; }
             
-            try { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen(); if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (err) {} 
+            try { 
+                if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); 
+                else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen(); 
+                if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); 
+            } catch (err) {} 
         });
 
         function spawnSplash(impactPoint, normal, mat, count = 12, speedMult = 1.0) { for(let i = 0; i < count; i++) { let p = splashPool[splashIdx]; splashIdx = (splashIdx + 1) % MAX_SPLASH; p.active = true; p.mesh.visible = true; p.mesh.position.copy(impactPoint); p.mesh.material = mat || sharedWaterMat; const ejectSpeed = (0.08 + Math.random() * 0.2) * speedMult; p.velocity.set( (normal.x * ejectSpeed) + (Math.random() - 0.5) * 0.15 * speedMult, (normal.y * ejectSpeed) + (Math.random() - 0.5) * 0.15 * speedMult + 0.08, (normal.z * ejectSpeed) + (Math.random() - 0.5) * 0.15 * speedMult ); p.maxLife = 10 + Math.random() * 15; p.life = p.maxLife; p.mesh.scale.setScalar(1.0 + Math.random() * 0.5); p.mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI); } }
@@ -640,127 +1070,119 @@
             const px = (camera.position.x / cellSize) * cellW; const pz = (camera.position.z / cellSize) * cellH; minimapCtx.fillStyle = '#ffffff'; minimapCtx.beginPath(); minimapCtx.arc(px, pz, cellW * 0.4, 0, Math.PI * 2); minimapCtx.fill(); minimapCtx.strokeStyle = '#ffffff'; minimapCtx.lineWidth = 1.5; minimapCtx.beginPath(); minimapCtx.moveTo(px, pz); minimapCtx.lineTo(px - Math.sin(playerAngle) * cellW * 1.5, pz - Math.cos(playerAngle) * cellH * 1.5); minimapCtx.stroke();
         }
         function checkCollision(x, z) { const padding = 0.6; const corners = [{cx: x-padding,cz:z-padding},{cx:x+padding,cz:z-padding},{cx:x-padding,cz:z+padding},{cx:x+padding,cz:z+padding}]; for (let c of corners) { const gridX = Math.round(c.cx / cellSize); const gridZ = Math.round(c.cz / cellSize); if (gridZ >= 0 && gridZ < currentMap.length && gridX >= 0 && gridX < currentMap[0].length) { if (currentMap[gridZ][gridX] === 1) return true; } else return true; } return false; }
-        function damagePlayer(amt) { playerHP -= amt; updateUI(); const flash = document.getElementById('damage-flash'); flash.style.background = 'red'; flash.style.opacity = '0.5'; setTimeout(() => { flash.style.opacity = '0'; }, 100); if(playerHP <= 0) { document.getElementById('ui').style.display = 'none'; document.getElementById('minimap').style.display = 'none'; document.getElementById('touch-controls').style.display = 'none'; document.getElementById('weapon-wrapper').style.display = 'none'; document.getElementById('boss-ui').style.display = 'none'; document.getElementById('pause-btn').style.display = 'none'; document.getElementById('game-over-score').innerText = "FINAL SCORE: " + score; document.getElementById('game-over-menu').style.display = 'flex'; } }
+        function damagePlayer(amt) { playerHP -= amt; updateUI(); const flash = document.getElementById('damage-flash'); flash.style.background = 'red'; flash.style.opacity = '0.5'; setTimeout(() => { flash.style.opacity = '0'; }, 100); if(playerHP <= 0) { 
+            document.getElementById('hud').style.display = 'none'; 
+            document.getElementById('minimap').style.display = 'none'; 
+            document.getElementById('touch-controls').style.display = 'none'; 
+            document.getElementById('weapon-wrapper').style.display = 'none'; 
+            document.getElementById('boss-ui').style.display = 'none'; 
+            document.getElementById('pause-btn').style.display = 'none'; 
+            crosshair.style.display = 'none'; 
+            if (document.pointerLockElement) document.exitPointerLock();
+            document.getElementById('game-over-score').innerText = "FINAL SCORE: " + score; 
+            document.getElementById('game-over-menu').style.display = 'flex'; 
+        } else { showHitMarker(); } }
 
-        // --- FULLY REBUILT GAMEPAD AGGREGATOR ---
         const gpState = { firing: false, swapPressed: false, menuPressed: false, pausePressed: false }; 
         const GP_DEADZONE = 0.15;
-        
         function getGamepadInput() { 
             const gamepads = navigator.getGamepads ? navigator.getGamepads() : []; 
-            let gp = null; 
-            for (let i = 0; i < gamepads.length; i++) { 
-                if (gamepads[i] && gamepads[i].connected) { gp = gamepads[i]; break; } 
-            } 
+            let gp = null; for (let i = 0; i < gamepads.length; i++) { if (gamepads[i] && gamepads[i].connected) { gp = gamepads[i]; break; } } 
             let input = { moveX: 0, moveY: 0, lookX: 0 }; 
             if (!gp) return input; 
-
             const btn = (i) => gp.buttons[i]?.pressed || false;
             const axis = (i) => Math.abs(gp.axes[i] || 0) > GP_DEADZONE ? gp.axes[i] : 0;
-
             let isMenuOpen = paused || playerHP <= 0 || document.getElementById('start-menu').style.display !== 'none';
             if (isMenuOpen) {
                 let isConfirm = btn(0) || btn(9) || btn(7); 
                 if (isConfirm && !gpState.menuPressed) {
                     gpState.menuPressed = true;
-                    if (document.getElementById('start-menu').style.display !== 'none') {
-                        document.getElementById('start-btn').click();
-                    } else if (playerHP <= 0) {
-                        document.getElementById(document.getElementById('game-over-menu').style.display === 'flex' ? 'game-over-restart-btn' : 'restart-btn').click();
-                    } else if (paused) {
-                        document.getElementById('resume-btn').click();
-                    }
-                } else if (!isConfirm) {
-                    gpState.menuPressed = false;
-                }
+                    if (document.getElementById('start-menu').style.display !== 'none') document.getElementById('start-btn').click();
+                    else if (playerHP <= 0) document.getElementById(document.getElementById('game-over-menu').style.display === 'flex' ? 'game-over-restart-btn' : 'restart-btn').click();
+                    else if (paused) document.getElementById('resume-btn').click();
+                } else if (!isConfirm) gpState.menuPressed = false;
                 return input; 
             }
-
             let isPausing = btn(9) || btn(8) || btn(16); 
-            if (isPausing && !gpState.pausePressed) {
-                gpState.pausePressed = true;
-                togglePause();
-            } else if (!isPausing) {
-                gpState.pausePressed = false;
-            }
-
-            let gMoveX = axis(0);
-            let gMoveY = axis(1);
-            if (btn(14)) gMoveX -= 1; 
-            if (btn(15)) gMoveX += 1; 
-            if (btn(12)) gMoveY -= 1; 
-            if (btn(13)) gMoveY += 1; 
-            
+            if (isPausing && !gpState.pausePressed) { gpState.pausePressed = true; togglePause(); } else if (!isPausing) gpState.pausePressed = false;
+            let gMoveX = axis(0); let gMoveY = axis(1);
+            if (btn(14)) gMoveX -= 1; if (btn(15)) gMoveX += 1; if (btn(12)) gMoveY -= 1; if (btn(13)) gMoveY += 1; 
             input.moveX = Math.max(-1, Math.min(1, gMoveX));
             input.moveY = Math.max(-1, Math.min(1, gMoveY));
-
             input.lookX = axis(2) || axis(3); 
-
             let isFiring = btn(7) || btn(0) || btn(6);
-            if (isFiring && !gpState.firing) { startFire(); gpState.firing = true; }
-            else if (!isFiring && gpState.firing) { endFire(); gpState.firing = false; }
-
+            if (isFiring && !gpState.firing) { startFire(); gpState.firing = true; } else if (!isFiring && gpState.firing) { endFire(); gpState.firing = false; }
             let isSwapping = btn(4) || btn(5) || btn(3) || btn(1); 
-            if (isSwapping && !gpState.swapPressed) { swapWeapon(); gpState.swapPressed = true; }
-            else if (!isSwapping) { gpState.swapPressed = false; }
-
+            if (isSwapping && !gpState.swapPressed) { swapWeapon(); gpState.swapPressed = true; } else if (!isSwapping) gpState.swapPressed = false;
             return input; 
         }
 
         function animate() {
             requestAnimationFrame(animate); let now = Date.now(); let timeSecs = now * 0.001; 
-            
             const gpInput = getGamepadInput();
-            
             if (paused) { composer.render(); return; } 
             
             wallMaterial.uniforms.time.value = timeSecs; floorMaterial.uniforms.time.value = timeSecs; oceanCeilingMat.uniforms.time.value = timeSecs; portalMat.uniforms.time.value = timeSecs;
             enemyWaterMat.uniforms.time.value = timeSecs; fastEnemyWaterMat.uniforms.time.value = timeSecs;
 
-            if (muzzleLight.intensity > 0) { muzzleLight.intensity = Math.max(0, muzzleLight.intensity - 0.75); }
+            if (muzzleLight.intensity > 0) { 
+                muzzleLight.intensity = Math.max(0, muzzleLight.intensity - 1.8); 
+                muzzleLight.position.copy(camera.position); muzzleLight.position.y -= 0.3;
+            }
+
+            updateTimerDisplay();
 
             for (let p of pickups) { if (!p.active) continue; p.mesh.rotation.y += 0.05; p.mesh.position.y = -0.6 + Math.sin(timeSecs * 3 + p.mesh.position.x) * 0.08; let dx = camera.position.x - p.mesh.position.x; let dz = camera.position.z - p.mesh.position.z; if ((dx*dx + dz*dz) < 1.21) { p.active = false; scene.remove(p.mesh); if (p.type === 'health') { playerHP = Math.min(125, playerHP + 50); const flash = document.getElementById('damage-flash'); flash.style.background = '#ff1493'; flash.style.opacity = '0.4'; setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.style.background = 'red', 100); }, 100); } else if (p.type === 'ammo') { ammo[currentWeapon] = Math.min(maxAmmo[currentWeapon], ammo[currentWeapon] + (currentWeapon === 0 ? 35 : 8)); } else if (p.type === 'weapon') { currentWeapon = 1; ammo[1] = maxAmmo[1]; } else if (p.type === 'weapon2') { currentWeapon = 2; ammo[2] = maxAmmo[2]; } updateUI(); } }
-            if ((currentLevel === 1 || currentLevel === 2) && !portalActive) { let aliveEnemies = enemies.filter(e => e.active).length; if (aliveEnemies === 0) { portalActive = true; portalMesh.position.set(4 * cellSize, 0, 5 * cellSize); portalMesh.visible = true; } }
-            if (portalActive) { portalMesh.rotation.y += 0.05; portalMesh.rotation.z += 0.02; let pdx = camera.position.x - portalMesh.position.x; let pdz = camera.position.z - portalMesh.position.z; if ((pdx*pdx + pdz*pdz) < 2.25) { if (currentLevel === 1) startLevel2(); else if (currentLevel === 2) startBossLevel(); } }
+            if (currentLevel < 5 && !portalActive) { let aliveEnemies = enemies.filter(e => e.active).length; if (aliveEnemies === 0) { portalActive = true; portalMesh.position.set((currentMap[0].length-2) * cellSize, 0, (currentMap.length-2) * cellSize); portalMesh.visible = true; } }
+            if (portalActive) { portalMesh.rotation.y += 0.05; portalMesh.rotation.z += 0.02; let pdx = camera.position.x - portalMesh.position.x; let pdz = camera.position.z - portalMesh.position.z; if ((pdx*pdx + pdz*pdz) < 2.25) { startLevel(currentLevel + 1); } }
 
-            let tMoveY = joyDelta.y;
-            let tLookX = joyDelta.x;
-            
+            let tMoveY = joyDelta.y; let tLookX = joyDelta.x;
             let kMoveY = 0; let kMoveX = 0; let kLookX = 0;
-            if (keys['w']) kMoveY -= 1;
-            if (keys['s']) kMoveY += 1;
-            if (keys['a']) kLookX -= 1.8;
-            if (keys['d']) kLookX += 1.8;
-
+            if (keys['w']) kMoveY -= 1; if (keys['s']) kMoveY += 1; if (keys['a']) kLookX -= 1.8; if (keys['d']) kLookX += 1.8;
             let moveY = Math.max(-1, Math.min(1, tMoveY + kMoveY + gpInput.moveY));
             let moveX = Math.max(-1, Math.min(1, kMoveX + gpInput.moveX)); 
             let lookX = tLookX + kLookX + (gpInput.lookX * 1.5);
-
             playerAngle -= lookX * maxTurnSpeed;
 
-            const dirX = Math.sin(playerAngle);
-            const dirZ = Math.cos(playerAngle);
-            const strafeX = Math.cos(playerAngle);
-            const strafeZ = -Math.sin(playerAngle);
-
+            const dirX = Math.sin(playerAngle); const dirZ = Math.cos(playerAngle);
+            const strafeX = Math.cos(playerAngle); const strafeZ = -Math.sin(playerAngle);
             let nextX = camera.position.x + (dirX * moveY * maxMoveSpeed) + (strafeX * moveX * maxMoveSpeed);
             let nextZ = camera.position.z + (dirZ * moveY * maxMoveSpeed) + (strafeZ * moveX * maxMoveSpeed);
-
             if (!checkCollision(nextX, camera.position.z)) camera.position.x = nextX; 
             if (!checkCollision(camera.position.x, nextZ)) camera.position.z = nextZ;
 
             const gravity = -0.015;
-            for (let e of enemies) { if (!e.active) continue; if (e.dying) { e.deathTimer--; let progress = e.deathTimer / 30; e.mesh.scale.y = Math.max(0.001, (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) * progress); e.mesh.scale.x = e.mesh.scale.z = (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) + (1.0 - progress) * (e.isBoss ? 3.0 : (e.isFast ? 1.2 : 1.5)); e.mesh.position.y = -0.9 + (progress * 0.4); if (e.deathTimer <= 0) { e.active = false; e.mesh.visible = false; e.dying = false; if (e.isBoss) { document.getElementById('ui').style.display = 'none'; document.getElementById('minimap').style.display = 'none'; document.getElementById('touch-controls').style.display = 'none'; document.getElementById('weapon-wrapper').style.display = 'none'; document.getElementById('pause-btn').style.display = 'none'; document.getElementById('final-score').innerText = "FINAL SCORE: " + score; document.getElementById('victory-menu').style.display = 'flex'; } } continue; } let dx = camera.position.x - e.mesh.position.x; let dz = camera.position.z - e.mesh.position.z; let isPhase2 = e.isBoss && (e.hp <= e.maxHp / 2); e.mesh.rotation.y = Math.atan2(dx, dz); e.floatOffset += isPhase2 ? 0.15 : 0.05; e.mesh.position.y = (e.isBoss ? -0.1 : -0.5) + Math.sin(e.floatOffset) * 0.15; e.speed = e.isBoss ? (isPhase2 ? 0.05 : 0.035) : (e.isFast ? 0.048 : 0.02); let distSq = dx*dx + dz*dz; let detectionSqSq = e.isBoss ? 400 : 144; if (distSq < detectionSqSq) { let dist = Math.sqrt(distSq); if (dist > (e.isBoss ? 4.0 : (e.isFast ? 0.9 : 1.5))) { let moveX = (dx / dist) * e.speed; let moveZ = (dz / dist) * e.speed; if (!checkCollision(e.mesh.position.x + moveX, e.mesh.position.z)) e.mesh.position.x += moveX; if (!checkCollision(e.mesh.position.x, e.mesh.position.z + moveZ)) e.mesh.position.z += moveZ; } let fireRate = e.isBoss ? (isPhase2 ? 250 : 800) : (e.isFast ? 900 : 1500); let fireRange = e.isBoss ? 20 : 8; if (now - e.lastShot > fireRate && dist < fireRange && playerHP > 0) { e.lastShot = now; let shots = e.isBoss && !isPhase2 ? 3 : 1; for(let s = 0; s < shots; s++) { let p = enemyProjPool[enemyProjIdx]; enemyProjIdx = (enemyProjIdx + 1) % MAX_ENEMY_PROJ; p.active = true; p.mesh.visible = true; p.mesh.position.copy(e.mesh.position); p.mesh.position.y += (e.isBoss ? 0.8 : 0.2); let spreadX = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let spreadZ = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let pSpeed = e.isBoss ? (isPhase2 ? 0.25 : 0.15) : (e.isFast ? 0.18 : 0.12); if (isPhase2) { spreadX = (Math.random() - 0.5) * 0.1; spreadZ = (Math.random() - 0.5) * 0.1; } p.velocity.set((dx/dist)*pSpeed + spreadX, 0.1, (dz/dist)*pSpeed + spreadZ); p.life = isPhase2 ? 80 : 60; if (isPhase2) { p.mesh.scale.set(1.5, 1.5, 4.0); p.isRocket = true; } else { p.mesh.scale.setScalar(e.isBoss ? 2.5 : (e.isFast ? 1.4 : 1.0)); p.isRocket = false; } } } } }
-            for (let i = 0; i < MAX_PROJ; i++) { let p = projPool[i]; if (!p.active) continue; p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; let didImpact = false; TEMP_NORMAL.copy(UP_VECTOR); if (p.mesh.position.y < -(cellSize / 2)) { p.mesh.position.y = -(cellSize / 2); didImpact = true; } if (!didImpact && checkCollision(p.mesh.position.x, p.mesh.position.z)) { didImpact = true; TEMP_NORMAL.set(-Math.sign(p.velocity.x), 0, -Math.sign(p.velocity.z)).normalize(); } if (!didImpact) { for(let e of enemies) { if(!e.active || e.dying) continue; let edx = p.mesh.position.x - e.mesh.position.x; let edy = p.mesh.position.y - e.mesh.position.y; let edz = p.mesh.position.z - e.mesh.position.z; let distSq = edx*edx + edy*edy + edz*edz; let hitBox = e.isBoss ? 1.8 : (e.isFast ? 0.55 : 0.7); if(distSq < hitBox*hitBox) { didImpact = true; TEMP_NORMAL.set(edx, edy, edz).normalize(); e.hp -= p.damage; if(e.isBoss) { document.getElementById('boss-bar-fill').style.width = (e.hp / e.maxHp * 100) + '%'; if (e.hp <= e.maxHp / 2) document.getElementById('boss-bar-fill').style.background = 'linear-gradient(90deg, #ff1493, #aa00ff)'; } if(e.hp <= 0 && !e.dying) { e.dying = true; e.deathTimer = 30; if(e.isBoss) { score += 500; document.getElementById('boss-ui').style.display = 'none'; } else score += e.isFast ? 35 : 25; updateUI(); spawnSplash(e.mesh.position, UP_VECTOR, enemyWaterMat, 30, 1.5); } break; } } } if (didImpact) { let splashCount = p.damage > 5 ? 20 : 8; let speedMult = p.damage > 5 ? 1.5 : 1.0; spawnSplash(p.mesh.position, TEMP_NORMAL, p.mesh.material, splashCount, speedMult); p.active = false; p.mesh.visible = false; } else if (p.life <= 0) { p.active = false; p.mesh.visible = false; } }
-            for (let i = 0; i < MAX_ENEMY_PROJ; i++) { let p = enemyProjPool[i]; if (!p.active) continue; p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; let pdx = p.mesh.position.x - camera.position.x; let pdz = p.mesh.position.z - camera.position.z; if ((pdx*pdx + pdz*pdz) < 0.36 && p.mesh.position.y > -1 && p.mesh.position.y < 1.5 && playerHP > 0) { let dmg = 10; if (p.mesh.scale.x > 1.5) dmg = 15; if (p.isRocket) dmg = 18.75; damagePlayer(dmg); spawnSplash(p.mesh.position, UP_VECTOR, enemyWaterMat, 15, 1.2); p.active = false; p.mesh.visible = false; continue; } if (p.life <= 0 || p.mesh.position.y < -(cellSize / 2) || checkCollision(p.mesh.position.x, p.mesh.position.z)) { spawnSplash(p.mesh.position, UP_VECTOR, enemyWaterMat, 15, 1.2); p.active = false; p.mesh.visible = false; } }
+            for (let e of enemies) { if (!e.active) continue; if (e.dying) { e.deathTimer--; let progress = e.deathTimer / 30; e.mesh.scale.y = Math.max(0.001, (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) * progress); e.mesh.scale.x = e.mesh.scale.z = (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) + (1.0 - progress) * (e.isBoss ? 3.0 : (e.isFast ? 1.2 : 1.5)); e.mesh.position.y = -0.9 + (progress * 0.4); if (e.deathTimer <= 0) { e.active = false; e.mesh.visible = false; e.dying = false; if (e.isBoss) { 
+                const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000);
+                const multiplier = Math.max(1, 5 - Math.floor(timeTaken / 60));
+                const finalScore = Math.floor(score * multiplier);
+                document.getElementById('hud').style.display = 'none'; 
+                document.getElementById('minimap').style.display = 'none'; 
+                document.getElementById('touch-controls').style.display = 'none'; 
+                document.getElementById('weapon-wrapper').style.display = 'none'; 
+                document.getElementById('pause-btn').style.display = 'none'; 
+                crosshair.style.display = 'none'; 
+                if (document.pointerLockElement) document.exitPointerLock();
+                document.getElementById('final-score').innerHTML = `
+                    FINAL SCORE: <span style="color:#ff1493">${String(finalScore).padStart(5, '0')}</span><br>
+                    <small style="font-size:18px; color:#8cedfa;">TIME: ${getFormattedTime()} • x${multiplier} BONUS</small>
+                `;
+                document.getElementById('victory-menu').style.display = 'flex'; 
+            } } continue; } let dx = camera.position.x - e.mesh.position.x; let dz = camera.position.z - e.mesh.position.z; let isPhase2 = e.isBoss && (e.hp <= e.maxHp / 2); e.mesh.rotation.y = Math.atan2(dx, dz); e.floatOffset += isPhase2 ? 0.15 : 0.05; e.mesh.position.y = (e.isBoss ? -0.1 : -0.5) + Math.sin(e.floatOffset) * 0.15; e.speed = e.isBoss ? (isPhase2 ? 0.05 : 0.035) : (e.isFast ? 0.048 : 0.02); let distSq = dx*dx + dz*dz; let detectionSqSq = e.isBoss ? 400 : 144; if (distSq < detectionSqSq) { let dist = Math.sqrt(distSq); if (dist > (e.isBoss ? 4.0 : (e.isFast ? 0.9 : 1.5))) { let moveX = (dx / dist) * e.speed; let moveZ = (dz / dist) * e.speed; if (!checkCollision(e.mesh.position.x + moveX, e.mesh.position.z)) e.mesh.position.x += moveX; if (!checkCollision(e.mesh.position.x, e.mesh.position.z + moveZ)) e.mesh.position.z += moveZ; } let fireRate = e.isBoss ? (isPhase2 ? 250 : 800) : (e.isFast ? 900 : 1500); let fireRange = e.isBoss ? 20 : 8; if (now - e.lastShot > fireRate && dist < fireRange && playerHP > 0) { e.lastShot = now; let shots = e.isBoss && !isPhase2 ? 3 : 1; for(let s = 0; s < shots; s++) { let p = enemyProjPool[enemyProjIdx]; enemyProjIdx = (enemyProjIdx + 1) % MAX_ENEMY_PROJ; p.active = true; p.mesh.visible = true; p.mesh.position.copy(e.mesh.position); p.mesh.position.y += (e.isBoss ? 0.8 : 0.2); let spreadX = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let spreadZ = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let pSpeed = e.isBoss ? (isPhase2 ? 0.25 : 0.15) : (e.isFast ? 0.18 : 0.12); if (isPhase2) { spreadX = (Math.random() - 0.5) * 0.1; spreadZ = (Math.random() - 0.5) * 0.1; } p.velocity.set((dx/dist)*pSpeed + spreadX, 0.1, (dz/dist)*pSpeed + spreadZ); p.life = isPhase2 ? 80 : 60; if (isPhase2) { p.mesh.scale.set(1.5, 1.5, 4.0); p.isRocket = true; } else { p.mesh.scale.setScalar(e.isBoss ? 2.5 : (e.isFast ? 1.4 : 1.0)); p.isRocket = false; } } } } }
+            for (let i = 0; i < MAX_PROJ; i++) { let p = projPool[i]; if (!p.active) continue; p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; let didImpact = false; TEMP_NORMAL.copy(UP_VECTOR); if (p.mesh.position.y < -(cellSize / 2)) { p.mesh.position.y = -(cellSize / 2); didImpact = true; } if (!didImpact && checkCollision(p.mesh.position.x, p.mesh.position.z)) { didImpact = true; TEMP_NORMAL.set(-Math.sign(p.velocity.x), 0, -Math.sign(p.velocity.z)).normalize(); } if (!didImpact) { for(let e of enemies) { if(!e.active || e.dying) continue; let edx = p.mesh.position.x - e.mesh.position.x; let edy = p.mesh.position.y - e.mesh.position.y; let edz = p.mesh.position.z - e.mesh.position.z; let distSq = edx*edx + edy*edy + edz*edz; let hitBox = e.isBoss ? 1.8 : (e.isFast ? 0.55 : 0.7); if(distSq < hitBox*hitBox) { didImpact = true; TEMP_NORMAL.set(edx, edy, edz).normalize(); e.hp -= p.damage; if(e.isBoss) { document.getElementById('boss-bar-fill').style.width = (e.hp / e.maxHp * 100) + '%'; if (e.hp <= e.maxHp / 2) document.getElementById('boss-bar-fill').style.background = 'linear-gradient(90deg, #ff1493, #aa00ff)'; } if(e.hp <= 0 && !e.dying) { e.dying = true; e.deathTimer = 30; if(e.isBoss) { score += 500; document.getElementById('boss-ui').style.display = 'none'; } else score += e.isFast ? 35 : 25; updateUI(); spawnSplash(e.mesh.position, UP_VECTOR, enemyWaterMat, 30, 1.5); } else { showHitMarker(); } break; } } } if (didImpact) { let splashCount = p.damage > 5 ? 20 : 8; let speedMult = p.damage > 5 ? 1.5 : 1.0; spawnSplash(p.mesh.position, TEMP_NORMAL, p.mesh.material, splashCount, speedMult); p.active = false; p.mesh.visible = false; } else if (p.life <= 0) { p.active = false; p.mesh.visible = false; } }
+            for (let i = 0; i < MAX_ENEMY_PROJ; i++) { let p = enemyProjPool[i]; if (!p.active) continue; p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; let pdx = p.mesh.position.x - camera.position.x; let pdz = p.mesh.position.z - camera.position.z; if ((pdx*pdx + pdz*pdz) < 0.36 && p.mesh.position.y > -1 && p.mesh.position.y < 1.5 && playerHP > 0) { let dmg = 7.5; if (p.mesh.scale.x > 1.5) dmg = 11.25; if (p.isRocket) dmg = 14.0625; damagePlayer(dmg); spawnSplash(p.mesh.position, UP_VECTOR, enemyWaterMat, 15, 1.2); p.active = false; p.mesh.visible = false; continue; } if (p.life <= 0 || p.mesh.position.y < -(cellSize / 2) || checkCollision(p.mesh.position.x, p.mesh.position.z)) { spawnSplash(p.mesh.position, UP_VECTOR, enemyWaterMat, 15, 1.2); p.active = false; p.mesh.visible = false; } }
             for (let i = 0; i < MAX_SPLASH; i++) { let p = splashPool[i]; if (!p.active) continue; p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; p.mesh.rotation.x += 0.2; p.mesh.rotation.y += 0.2; p.mesh.scale.setScalar(Math.max(0.01, p.life / p.maxLife)); if (p.life <= 0 || p.mesh.position.y < -(cellSize / 2)) { p.active = false; p.mesh.visible = false; } }
 
             drawMinimap();
             camera.rotation.y = playerAngle; 
-            
+            applyShake();
             composer.render();
         }
-        startLevel1();
+
+        // Initialize everything
+        setupMuteButtons();
+        setupVolumeSliders();
+        startLevel(1);
     </script>
 </body>
 </html>
