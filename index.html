@@ -48,8 +48,9 @@
         #start-menu p, #victory-menu p, #game-over-menu p, #pause-menu p { color: var(--moist-teal-light); font-size: 17px; margin-top: 12px; text-align: center; text-shadow: 0 0 12px var(--moist-teal); max-width: 620px; }
 
         .start-btn { padding: 20px 52px; font-size: 24px; font-family: inherit; background: var(--moist-gradient); color: var(--moist-bg-dark); border: none; border-radius: 9999px; cursor: pointer; font-weight: bold; box-shadow: 0 12px #136a75, 0 0 35px var(--moist-teal), inset 0 0 20px var(--neon-pink), 0 0 0 6px rgba(170,0,255,0.3); animation: pulse 1.8s infinite; text-transform: uppercase; letter-spacing: 3px; transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275); outline: none; }
-        .start-btn:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 16px #136a75, 0 0 45px var(--moist-teal); }
-        .start-btn:active { transform: translateY(6px) scale(0.95); }
+        .start-btn:hover:not(:disabled) { transform: scale(1.08) translateY(-2px); box-shadow: 0 16px #136a75, 0 0 45px var(--moist-teal); }
+        .start-btn:active:not(:disabled) { transform: translateY(6px) scale(0.95); }
+        .start-btn:disabled { opacity: 0.6; cursor: not-allowed; animation: none; box-shadow: 0 12px #136a75; }
 
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 
@@ -143,11 +144,13 @@
         /* Mobile HUD Transparency & Scaling Optimization */
         @media (max-width: 768px) {
             #hud { 
-                background: rgba(20,28,42,0.25); 
-                backdrop-filter: blur(4px); 
-                transform: scale(0.65); 
+                background: rgba(20,28,42,0.1); 
+                backdrop-filter: blur(1px); 
+                transform: scale(0.5); 
                 transform-origin: top left; 
                 box-shadow: none;
+                border: 2px solid rgba(170,0,255,0.2);
+                border-image: none;
             }
             #minimap { 
                 opacity: 0.55; 
@@ -181,7 +184,7 @@
         <div id="start-bg-overlay"></div>
 
         <h1 style="color: var(--moist-teal-light);">SFWFPS: Liquid Edition</h1>
-        <button class="start-btn" id="start-btn">START DEMO</button>
+        <button class="start-btn" id="start-btn">LOADING ASSETS...</button>
         <p>Gamepad: Left Stick = Move • Right Stick = Look • RT = Fire • X = Dodge • LB/RB = Swap<br>Keyboard: WASD = Move • F = Dodge • Q = Swap • Click = Fire • ESC = Pause</p>
         
         <div style="margin-top: 40px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
@@ -267,8 +270,38 @@
         import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
         import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
         import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
         setInterval(() => { if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur(); }, 100);
+
+        // --- GLTF Asset Preloading ---
+        const gltfLoader = new GLTFLoader();
+        const sourceGltfs = { moistling: null, rippleReaver: null, aquaOverlord: null };
+        let modelsLoadedCount = 0;
+        const totalModelsToLoad = 3;
+        const startBtn = document.getElementById('start-btn');
+
+        const checkStartBtn = () => {
+            modelsLoadedCount++;
+            if(modelsLoadedCount >= totalModelsToLoad) {
+                startBtn.textContent = 'START DEMO';
+                startBtn.disabled = false;
+            }
+        };
+
+        gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/moistling.glb', (gltf) => {
+            sourceGltfs.moistling = gltf; checkStartBtn();
+        }, undefined, (e) => { console.error('Failed to load moistling.glb', e); checkStartBtn(); });
+
+        gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/ripple-reaver.glb', (gltf) => {
+            sourceGltfs.rippleReaver = gltf; checkStartBtn();
+        }, undefined, (e) => { console.error('Failed to load ripple-reaver.glb', e); checkStartBtn(); });
+
+        gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/aqua-overlord.glb', (gltf) => {
+            sourceGltfs.aquaOverlord = gltf; checkStartBtn();
+        }, undefined, (e) => { console.error('Failed to load aqua-overlord.glb', e); checkStartBtn(); });
+        // -----------------------------
 
         let audioCtx;
         let menuMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/before_the_gate_closes.mp3');
@@ -363,6 +396,7 @@
         let isAnimating = false;
         let currentLevel = 1;
         let isInvincible = false;
+        const clock = new THREE.Clock(); 
 
         // Kinesthetic State
         let headBobTimer = 0;
@@ -440,6 +474,12 @@
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x222d3a); 
         scene.fog = new THREE.FogExp2(0x222d3a, 0.08);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        scene.add(ambientLight);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
 
         const muzzleLight = new THREE.PointLight(0xff1493, 0, 10);
         scene.add(muzzleLight);
@@ -578,11 +618,60 @@
         }
 
         const enemies = [];
+        
         function spawnEnemy(gridX, gridZ, isBoss = false, isFast = false) {
-            const mat = isFast ? fastEnemyWaterMat : enemyWaterMat; let mesh = createWaterHumanoid(mat); mesh.position.set(gridX * cellSize, -0.5, gridZ * cellSize); 
-            if (isBoss) { mesh.scale.set(2.0, 2.0, 2.0); mesh.position.y = -0.1; scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 75, maxHp: 75, isBoss: true, isFast: false, lastShot: 0, speed: 0.035, floatOffset: Math.random() * Math.PI * 2 }); } 
-            else if (isFast) { mesh.scale.set(0.55, 0.55, 0.55); scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 3, maxHp: 3, isBoss: false, isFast: true, lastShot: 0, speed: 0.048, floatOffset: Math.random() * Math.PI * 2 }); } 
-            else { scene.add(mesh); enemies.push({ active: true, dying: false, deathTimer: 0, mesh: mesh, hp: 5, maxHp: 5, isBoss: false, isFast: false, lastShot: 0, speed: 0.02, floatOffset: Math.random() * Math.PI * 2 }); }
+            // HARD FORCED: Bosses must always try to be GLTF. Minions are 50/50.
+            let useGltf = isBoss ? true : Math.random() > 0.5;
+            let mesh;
+            let mixer = null;
+            let source = isBoss ? sourceGltfs.aquaOverlord : (isFast ? sourceGltfs.rippleReaver : sourceGltfs.moistling);
+            let isGltfLoaded = useGltf && source && source.scene;
+            let baseScale = 1.0;
+
+            if (isGltfLoaded) {
+                mesh = SkeletonUtils.clone(source.scene);
+                if (source.animations && source.animations.length > 0) {
+                    mixer = new THREE.AnimationMixer(mesh);
+                    const action = mixer.clipAction(source.animations[0]);
+                    action.play();
+                }
+                
+                // Increased sizes for GLTF models
+                if (isBoss) baseScale = 3.8;
+                else if (isFast) baseScale = 1.2;
+                else baseScale = 1.8;
+            } else {
+                const mat = isFast ? fastEnemyWaterMat : enemyWaterMat;
+                mesh = createWaterHumanoid(mat);
+                
+                // Standard sizes for procedural models
+                if (isBoss) baseScale = 2.0;
+                else if (isFast) baseScale = 0.55;
+                else baseScale = 0.8;
+            }
+
+            mesh.scale.setScalar(baseScale);
+            mesh.position.set(gridX * cellSize, -0.5, gridZ * cellSize); 
+            if (isBoss) mesh.position.y = -0.1;
+            
+            scene.add(mesh); 
+            
+            enemies.push({ 
+                active: true, 
+                dying: false, 
+                deathTimer: 0, 
+                mesh: mesh, 
+                hp: isBoss ? 75 : (isFast ? 3 : 5), 
+                maxHp: isBoss ? 75 : (isFast ? 3 : 5), 
+                isBoss: isBoss, 
+                isFast: isFast, 
+                isGltf: isGltfLoaded,
+                lastShot: 0, 
+                speed: isBoss ? 0.035 : (isFast ? 0.048 : 0.02), 
+                floatOffset: Math.random() * Math.PI * 2, 
+                mixer: mixer,
+                baseScale: baseScale
+            }); 
         }
 
         function faceNearestEnemy() { let nearest = null; let minDistSq = Infinity; for (let e of enemies) { if (!e.active) continue; let dx = e.mesh.position.x - camera.position.x; let dz = e.mesh.position.z - camera.position.z; let distSq = (dx*dx + dz*dz); if (distSq < minDistSq) { minDistSq = distSq; nearest = e; } } if (nearest) playerAngle = Math.atan2(camera.position.x - nearest.mesh.position.x, camera.position.z - nearest.mesh.position.z); }
@@ -698,8 +787,11 @@
             
             camera.position.set(cellSize * 1.5, 0, cellSize * 1.5);
 
-            const enemyCount = 3 + level * 2;
-            for (let i = 0; i < Math.min(enemyCount, floors.length - 8); i++) {
+            const enemyCount = Math.max(1, 3 + level * 2);
+            const availableFloors = Math.max(1, floors.length - 8);
+            const toSpawn = Math.min(enemyCount, availableFloors);
+
+            for (let i = 0; i < toSpawn; i++) {
                 const pos = floors[i + 8];
                 const isFast = level >= 3 && Math.random() > 0.6;
                 spawnEnemy(pos.x, pos.z, false, isFast);
@@ -726,12 +818,16 @@
             portalMesh.visible = false;
             
             document.getElementById('boss-ui').style.display = 'none';
+
+            // IMPORTANT: Clear old enemies cleanly from the scene and array for ALL levels
+            for(let e of enemies) if(e.mesh) scene.remove(e.mesh);
+            enemies.length = 0;
+
             if (level >= 5) {
                 currentLevel = 5;
                 buildMap([[1,1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,0,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1,1]]);
                 updateWallTrim(5);
                 camera.position.set(cellSize * 5.5, 0, cellSize * 8);
-                enemies.length = 0;
                 
                 spawnEnemy(5.5, 3, true);
                 
@@ -771,7 +867,7 @@
             const activeMenu = [document.getElementById('start-menu'), document.getElementById('pause-menu'), document.getElementById('game-over-menu'), document.getElementById('victory-menu')].find(m => m.style.display !== 'none');
             if (!activeMenu) return;
 
-            interactables = Array.from(activeMenu.querySelectorAll('button, input[type="range"]')).filter(el => el.offsetParent !== null);
+            interactables = Array.from(activeMenu.querySelectorAll('button:not(:disabled), input[type="range"]')).filter(el => el.offsetParent !== null);
             if (interactables.length === 0) return;
 
             if (currentFocusIndex >= interactables.length) currentFocusIndex = 0;
@@ -787,7 +883,6 @@
             interactables.forEach(el => el.classList.remove('gp-focused'));
         }, { passive: true });
 
-        // Force initial UI update in case controller is used immediately
         setTimeout(() => { updateGamepadUI(); }, 500);
 
         function resetGame() { 
@@ -796,7 +891,6 @@
             dodgeActive = false;
             isInvincible = false;
             
-            // Reset Kinesthetics
             headBobTimer = 0;
             weaponSwayX = 0;
             weaponSwayY = 0;
@@ -819,6 +913,7 @@
             crosshair.style.display = 'block';
             if (document.pointerLockElement) document.exitPointerLock();
             paused = false; portalActive = false; portalMesh.visible = false; 
+
             startLevel(1); 
             for(let p of projPool) { p.active = false; p.mesh.visible = false; } 
             for(let p of enemyProjPool) { p.active = false; p.mesh.visible = false; } 
@@ -1238,7 +1333,10 @@
         }
 
         function animate() {
-            requestAnimationFrame(animate); let now = Date.now(); let timeSecs = now * 0.001; 
+            requestAnimationFrame(animate); 
+            let now = Date.now(); 
+            let timeSecs = now * 0.001; 
+            let delta = clock.getDelta(); 
             const gpInput = getGamepadInput();
             
             if (paused) { return; } 
@@ -1257,7 +1355,7 @@
             
             if (currentLevel < 5 && !portalActive) { 
                 let aliveEnemies = enemies.filter(e => e.active).length; 
-                if (aliveEnemies === 0) { 
+                if (aliveEnemies === 0 && enemies.length > 0) { 
                     portalActive = true; 
                     portalMesh.position.set((currentMap[0].length-2) * cellSize, 0, (currentMap.length-2) * cellSize); 
                     portalMesh.visible = true; 
@@ -1304,32 +1402,80 @@
             if (!checkCollision(camera.position.x, nextZ)) camera.position.z = nextZ;
 
             const gravity = -0.015;
-            for (let e of enemies) { if (!e.active) continue; if (e.dying) { e.deathTimer--; let progress = e.deathTimer / 30; e.mesh.scale.y = Math.max(0.001, (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) * progress); e.mesh.scale.x = e.mesh.scale.z = (e.isBoss ? 2.0 : (e.isFast ? 0.55 : 0.8)) + (1.0 - progress) * (e.isBoss ? 3.0 : (e.isFast ? 1.2 : 1.5)); e.mesh.position.y = -0.9 + (progress * 0.4); if (e.deathTimer <= 0) { e.active = false; e.mesh.visible = false; e.dying = false; if (e.isBoss) { 
+            for (let e of enemies) { 
+                if (!e.active) continue; 
                 
-                paused = true; 
-                const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000);
-                const multiplier = Math.max(1, 5 - Math.floor(timeTaken / 60));
-                const killBonus = totalKills * 150;
-                const basePlusKills = score + killBonus;
-                const finalScore = Math.floor(basePlusKills * multiplier);
+                if (e.mixer) e.mixer.update(delta);
 
-                document.getElementById('hud').style.display = 'none'; 
-                document.getElementById('minimap').style.display = 'none'; 
-                document.getElementById('touch-controls').style.display = 'none'; 
-                document.getElementById('weapon-wrapper').style.display = 'none'; 
-                document.getElementById('pause-btn').style.display = 'none'; 
-                crosshair.style.display = 'none'; 
-                if (document.pointerLockElement) document.exitPointerLock();
+                if (e.dying) { 
+                    e.deathTimer--; let progress = e.deathTimer / 30; 
+                    e.mesh.scale.y = Math.max(0.001, e.baseScale * progress); 
+                    e.mesh.scale.x = e.mesh.scale.z = e.baseScale + (1.0 - progress) * (e.isBoss ? 3.0 : 1.5); 
+                    e.mesh.position.y = -0.9 + (progress * 0.4); 
+                    if (e.deathTimer <= 0) { 
+                        e.active = false; e.mesh.visible = false; e.dying = false; 
+                        if (e.isBoss) { 
+                            paused = true; 
+                            const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000);
+                            const multiplier = Math.max(1, 5 - Math.floor(timeTaken / 60));
+                            const killBonus = totalKills * 150;
+                            const basePlusKills = score + killBonus;
+                            const finalScore = Math.floor(basePlusKills * multiplier);
+
+                            document.getElementById('hud').style.display = 'none'; 
+                            document.getElementById('minimap').style.display = 'none'; 
+                            document.getElementById('touch-controls').style.display = 'none'; 
+                            document.getElementById('weapon-wrapper').style.display = 'none'; 
+                            document.getElementById('pause-btn').style.display = 'none'; 
+                            crosshair.style.display = 'none'; 
+                            if (document.pointerLockElement) document.exitPointerLock();
+                            
+                            document.getElementById('final-score').innerHTML = `
+                                <div style="font-size: 20px; color: #fff; margin-bottom: 8px; letter-spacing: 2px;">BASE SCORE: ${String(score).padStart(5, '0')}</div>
+                                <div style="font-size: 18px; color: #ffcc00; margin-bottom: 8px; letter-spacing: 2px;">ENEMIES CLEARED: ${totalKills} <span style="opacity: 0.8;">(+${killBonus} PTS)</span></div>
+                                <div style="font-size: 18px; color: #8cedfa; margin-bottom: 24px; letter-spacing: 2px;">CLEAR TIME: ${getFormattedTime()} <span style="opacity: 0.8;">(x${multiplier} MULTIPLIER)</span></div>
+                                <div style="font-size: 36px; color: #ff1493; text-shadow: 0 0 20px #ff1493; letter-spacing: 4px;">FINAL SCORE: ${String(finalScore).padStart(5, '0')}</div>
+                            `;
+                            document.getElementById('victory-menu').style.display = 'flex'; 
+                            currentFocusIndex = 0; updateGamepadUI();
+                        } 
+                    } 
+                    continue; 
+                } 
                 
-                document.getElementById('final-score').innerHTML = `
-                    <div style="font-size: 20px; color: #fff; margin-bottom: 8px; letter-spacing: 2px;">BASE SCORE: ${String(score).padStart(5, '0')}</div>
-                    <div style="font-size: 18px; color: #ffcc00; margin-bottom: 8px; letter-spacing: 2px;">ENEMIES CLEARED: ${totalKills} <span style="opacity: 0.8;">(+${killBonus} PTS)</span></div>
-                    <div style="font-size: 18px; color: #8cedfa; margin-bottom: 24px; letter-spacing: 2px;">CLEAR TIME: ${getFormattedTime()} <span style="opacity: 0.8;">(x${multiplier} MULTIPLIER)</span></div>
-                    <div style="font-size: 36px; color: #ff1493; text-shadow: 0 0 20px #ff1493; letter-spacing: 4px;">FINAL SCORE: ${String(finalScore).padStart(5, '0')}</div>
-                `;
-                document.getElementById('victory-menu').style.display = 'flex'; 
-                currentFocusIndex = 0; updateGamepadUI();
-            } } continue; } let dx = camera.position.x - e.mesh.position.x; let dz = camera.position.z - e.mesh.position.z; let isPhase2 = e.isBoss && (e.hp <= e.maxHp / 2); e.mesh.rotation.y = Math.atan2(dx, dz); e.floatOffset += isPhase2 ? 0.15 : 0.05; e.mesh.position.y = (e.isBoss ? -0.1 : -0.5) + Math.sin(e.floatOffset) * 0.15; e.speed = e.isBoss ? (isPhase2 ? 0.05 : 0.035) : (e.isFast ? 0.048 : 0.02); let distSq = dx*dx + dz*dz; let detectionSqSq = e.isBoss ? 400 : 144; if (distSq < detectionSqSq) { let dist = Math.sqrt(distSq); if (dist > (e.isBoss ? 4.0 : (e.isFast ? 0.9 : 1.5))) { let moveX = (dx / dist) * e.speed; let moveZ = (dz / dist) * e.speed; if (!checkCollision(e.mesh.position.x + moveX, e.mesh.position.z)) e.mesh.position.x += moveX; if (!checkCollision(e.mesh.position.x, e.mesh.position.z + moveZ)) e.mesh.position.z += moveZ; } let fireRate = e.isBoss ? (isPhase2 ? 250 : 800) : (e.isFast ? 900 : 1500); let fireRange = e.isBoss ? 20 : 8; if (now - e.lastShot > fireRate && dist < fireRange && playerHP > 0) { e.lastShot = now; let shots = e.isBoss && !isPhase2 ? 3 : 1; for(let s = 0; s < shots; s++) { let p = enemyProjPool[enemyProjIdx]; enemyProjIdx = (enemyProjIdx + 1) % MAX_ENEMY_PROJ; p.active = true; p.mesh.visible = true; p.mesh.position.copy(e.mesh.position); p.mesh.position.y += (e.isBoss ? 0.8 : 0.2); let spreadX = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let spreadZ = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let pSpeed = e.isBoss ? (isPhase2 ? 0.25 : 0.15) : (e.isFast ? 0.18 : 0.12); if (isPhase2) { spreadX = (Math.random() - 0.5) * 0.1; spreadZ = (Math.random() - 0.5) * 0.1; } p.velocity.set((dx/dist)*pSpeed + spreadX, 0.1, (dz/dist)*pSpeed + spreadZ); p.life = isPhase2 ? 80 : 60; if (isPhase2) { p.mesh.scale.set(1.5, 1.5, 4.0); p.isRocket = true; } else { p.mesh.scale.setScalar(e.isBoss ? 2.5 : (e.isFast ? 1.4 : 1.0)); p.isRocket = false; } } } } }
+                let dx = camera.position.x - e.mesh.position.x; let dz = camera.position.z - e.mesh.position.z; 
+                let isPhase2 = e.isBoss && (e.hp <= e.maxHp / 2); 
+                
+                e.mesh.rotation.y = Math.atan2(dx, dz); 
+                if (e.isGltf) e.mesh.rotation.y -= Math.PI / 2; 
+
+                e.floatOffset += isPhase2 ? 0.15 : 0.05; 
+                e.mesh.position.y = (e.isBoss ? -0.1 : -0.5) + Math.sin(e.floatOffset) * 0.15; 
+                e.speed = e.isBoss ? (isPhase2 ? 0.05 : 0.035) : (e.isFast ? 0.048 : 0.02); 
+                let distSq = dx*dx + dz*dz; let detectionSqSq = e.isBoss ? 400 : 144; 
+                
+                if (distSq < detectionSqSq) { 
+                    let dist = Math.sqrt(distSq); 
+                    if (dist > (e.isBoss ? 4.0 : (e.isFast ? 0.9 : 1.5))) { 
+                        let moveX = (dx / dist) * e.speed; let moveZ = (dz / dist) * e.speed; 
+                        if (!checkCollision(e.mesh.position.x + moveX, e.mesh.position.z)) e.mesh.position.x += moveX; 
+                        if (!checkCollision(e.mesh.position.x, e.mesh.position.z + moveZ)) e.mesh.position.z += moveZ; 
+                    } 
+                    let fireRate = e.isBoss ? (isPhase2 ? 250 : 800) : (e.isFast ? 900 : 1500); let fireRange = e.isBoss ? 20 : 8; 
+                    if (now - e.lastShot > fireRate && dist < fireRange && playerHP > 0) { 
+                        e.lastShot = now; let shots = e.isBoss && !isPhase2 ? 3 : 1; 
+                        for(let s = 0; s < shots; s++) { 
+                            let p = enemyProjPool[enemyProjIdx]; enemyProjIdx = (enemyProjIdx + 1) % MAX_ENEMY_PROJ; 
+                            p.active = true; p.mesh.visible = true; p.mesh.position.copy(e.mesh.position); p.mesh.position.y += (e.isBoss ? 0.8 : 0.2); 
+                            let spreadX = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; let spreadZ = e.isBoss && !isPhase2 ? (s - 1) * 0.15 : 0; 
+                            let pSpeed = e.isBoss ? (isPhase2 ? 0.25 : 0.15) : (e.isFast ? 0.18 : 0.12); 
+                            if (isPhase2) { spreadX = (Math.random() - 0.5) * 0.1; spreadZ = (Math.random() - 0.5) * 0.1; } 
+                            p.velocity.set((dx/dist)*pSpeed + spreadX, 0.1, (dz/dist)*pSpeed + spreadZ); p.life = isPhase2 ? 80 : 60; 
+                            if (isPhase2) { p.mesh.scale.set(1.5, 1.5, 4.0); p.isRocket = true; } else { p.mesh.scale.setScalar(e.isBoss ? 2.5 : (e.isFast ? 1.4 : 1.0)); p.isRocket = false; } 
+                        } 
+                    } 
+                } 
+            }
             for (let i = 0; i < MAX_PROJ; i++) { 
                 let p = projPool[i]; if (!p.active) continue; 
                 p.mesh.position.add(p.velocity); p.velocity.y += gravity; p.life--; 
