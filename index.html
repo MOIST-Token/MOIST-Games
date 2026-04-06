@@ -29,25 +29,29 @@
             --moist-gradient-dark: linear-gradient(135deg, var(--moist-teal), var(--moist-teal-dark));
             --neon-trim-gradient: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
         }
-        body { margin: 0; padding: 0; overflow: hidden; background-color: var(--moist-bg-dark); font-family: 'Arial Rounded MT Bold', sans-serif; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-        canvas { image-rendering: pixelated; width: 100vw; height: 100vh; display: block; }
+        body { margin: 0; padding: 0; overflow: hidden; background-color: var(--moist-bg-dark); font-family: 'Arial Rounded MT Bold', sans-serif; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        canvas { image-rendering: pixelated; width: 100vw; height: 100vh; display: block; touch-action: none; }
 
         .cyber-panel { background: rgba(34, 45, 58, 0.92); backdrop-filter: blur(16px) saturate(180%); border: 4px solid transparent; border-image: var(--neon-trim-gradient) 1; box-shadow: 0 0 30px var(--neon-purple), 0 0 60px rgba(170, 0, 255, 0.3), inset 0 0 25px rgba(140, 237, 250, 0.25); color: white; text-shadow: 0 0 12px var(--neon-purple); }
 
-        #start-menu, #victory-menu, #game-over-menu, #pause-menu { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #start-bg-video { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 9998; pointer-events: none; }
+        #start-bg-overlay { position: fixed; inset: 0; width: 100vw; height: 100vh; background: rgba(20, 28, 42, 0.75); z-index: 9999; pointer-events: none; }
+
+        #start-menu, #victory-menu, #game-over-menu, #pause-menu { 
+            position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y;
+        }
         #victory-menu, #game-over-menu, #pause-menu { display: none; }
 
         #start-menu { background: transparent !important; backdrop-filter: none !important; }
-        #start-bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -3; pointer-events: none; }
-        #start-bg-overlay { position: absolute; inset: 0; background: rgba(20, 28, 42, 0.75); z-index: -2; pointer-events: none; }
-
-        #start-menu::after, #pause-menu::after, #victory-menu::after, #game-over-menu::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06)); background-size: 100% 4px, 3px 100%; z-index: -1; animation: scanline 4s linear infinite; }
+        
+        #start-menu::after, #pause-menu::after, #victory-menu::after, #game-over-menu::after { content: ""; position: fixed; inset: 0; pointer-events: none; background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%), linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06)); background-size: 100% 4px, 3px 100%; z-index: -1; animation: scanline 4s linear infinite; }
         @keyframes scanline { 0% { background-position: 0 0; } 100% { background-position: 0 100%; } }
 
         #start-menu h1, #victory-menu h1, #game-over-menu h1, #pause-menu h1 { font-size: 68px; margin-bottom: 24px; text-align: center; text-transform: uppercase; letter-spacing: -5px; text-shadow: 0 0 20px var(--moist-teal-dark), 0 0 40px var(--moist-teal), 0 0 60px var(--neon-purple), 4px 4px 0px var(--neon-pink); }
         #start-menu p, #victory-menu p, #game-over-menu p, #pause-menu p { color: var(--moist-teal-light); font-size: 17px; margin-top: 12px; text-align: center; text-shadow: 0 0 12px var(--moist-teal); max-width: 620px; }
 
-        .start-btn { padding: 20px 52px; font-size: 24px; font-family: inherit; background: var(--moist-gradient); color: var(--moist-bg-dark); border: none; border-radius: 9999px; cursor: pointer; font-weight: bold; box-shadow: 0 12px #136a75, 0 0 35px var(--moist-teal), inset 0 0 20px var(--neon-pink), 0 0 0 6px rgba(170,0,255,0.3); animation: pulse 1.8s infinite; text-transform: uppercase; letter-spacing: 3px; transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275); outline: none; }
+        .start-btn { padding: 20px 52px; font-size: 24px; font-family: inherit; background: var(--moist-gradient); color: var(--moist-bg-dark); border: none; border-radius: 9999px; cursor: pointer; font-weight: bold; box-shadow: 0 12px #136a75, 0 0 35px var(--moist-teal), inset 0 0 20px var(--neon-pink), 0 0 0 6px rgba(170,0,255,0.3); animation: pulse 1.8s infinite; text-transform: uppercase; letter-spacing: 3px; transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275); outline: none; flex-shrink: 0; }
         .start-btn:hover:not(:disabled) { transform: scale(1.08) translateY(-2px); box-shadow: 0 16px #136a75, 0 0 45px var(--moist-teal); }
         .start-btn:active:not(:disabled) { transform: translateY(6px) scale(0.95); }
         .start-btn:disabled { opacity: 0.6; cursor: not-allowed; animation: none; box-shadow: 0 12px #136a75; }
@@ -107,7 +111,7 @@
 
         .boop-weapon #water-spout, .shotgun-weapon #water-spout, .rocket-weapon #water-spout { background: radial-gradient(ellipse at bottom, rgba(140,237,250,0.9) 0%, rgba(52,190,205,0) 70%); }
 
-        #touch-controls { position: absolute; inset: 0; pointer-events: none; z-index: 20; display: none; }
+        #touch-controls { position: absolute; inset: 0; pointer-events: none; z-index: 20; display: none; touch-action: none; }
         #joystick-zone { position: absolute; bottom: 32px; left: 32px; width: 148px; height: 148px; background: rgba(52,190,205,0.15); border: 3px solid rgba(170,0,255,0.7); border-radius: 50%; pointer-events: auto; box-shadow: 0 0 25px rgba(170,0,255,0.4); }
         #joystick-knob { position: absolute; top: 50%; left: 50%; width: 64px; height: 64px; background: rgba(140,237,250,0.9); border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 20px var(--moist-teal-light); }
         .control-btn { pointer-events: auto; background: rgba(34,45,58,0.9); border: 3px solid var(--neon-pink); border-radius: 50%; color: var(--moist-teal-light); font-weight: bold; display: flex; justify-content: center; align-items: center; position: absolute; cursor: pointer; box-shadow: 0 0 20px var(--neon-pink); }
@@ -127,7 +131,7 @@
 
         #damage-flash { position: fixed; inset: 0; background: red; opacity: 0; z-index: 5; pointer-events: none; transition: opacity 0.1s; }
 
-        .mute-btn { padding: 12px 28px; font-size: 15px; font-family: inherit; background: rgba(20,28,42,0.9); color: white; border: 3px solid var(--neon-purple); border-radius: 9999px; cursor: pointer; box-shadow: 0 0 20px var(--neon-purple); transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 2px; }
+        .mute-btn { padding: 12px 28px; font-size: 15px; font-family: inherit; background: rgba(20,28,42,0.9); color: white; border: 3px solid var(--neon-purple); border-radius: 9999px; cursor: pointer; box-shadow: 0 0 20px var(--neon-purple); transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 2px; flex-shrink: 0; }
         .mute-btn:hover { box-shadow: 0 0 30px var(--neon-pink); transform: scale(1.05); }
         .mute-btn:active { transform: scale(0.95); }
         .mute-btn.muted { border-color: #ff1493; color: #ff1493; text-shadow: 0 0 12px #ff1493; }
@@ -141,48 +145,76 @@
         .start-btn.gp-focused, .mute-btn.gp-focused { box-shadow: 0 0 0 6px var(--moist-teal-light), 0 0 45px var(--moist-teal) !important; transform: scale(1.08) !important; }
         input[type="range"].gp-focused { outline: 4px solid var(--moist-teal-light); outline-offset: 4px; }
 
-        /* Mobile HUD Transparency & Scaling Optimization */
-        @media (max-width: 768px) {
-            #hud { 
-                background: rgba(20,28,42,0.1); 
-                backdrop-filter: blur(1px); 
-                transform: scale(0.5); 
-                transform-origin: top left; 
-                box-shadow: none;
-                border: 2px solid rgba(170,0,255,0.2);
-                border-image: none;
+        /* Landscape / Short Screen Menu Adjustments */
+        @media (max-height: 600px) {
+            #start-menu, #victory-menu, #game-over-menu, #pause-menu {
+                justify-content: flex-start;
+                padding: 40px 0;
             }
+            #start-menu h1, #victory-menu h1, #game-over-menu h1, #pause-menu h1 {
+                font-size: 42px;
+                margin-bottom: 12px;
+            }
+            .start-btn {
+                padding: 16px 42px;
+                font-size: 20px;
+            }
+        }
+
+        /* Mobile HUD Deconstruction & Optimization - NOW TARGETING UP TO 1024px AND LANDSCAPE */
+        @media (max-width: 1024px), (max-height: 500px) {
+            #hud { 
+                background: transparent; backdrop-filter: none; border: none; box-shadow: none;
+                transform: none; min-width: 0; width: 100%; height: 100%; top: 0; left: 0; padding: 0;
+            }
+            .hud-row { display: block; } 
+            .hp-group {
+                position: absolute; top: 15px; left: 15px; background: rgba(20,28,42,0.8);
+                padding: 8px 12px; border-radius: 12px; border: 2px solid var(--neon-pink);
+            }
+            .hp-label { display: none; } 
+            .hp-bar-container { width: 100px; height: 16px; }
+            #hp-num { font-size: 18px; min-width: 40px; }
+            .ammo-group {
+                position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+                background: rgba(20,28,42,0.8); padding: 6px 16px; border-radius: 12px;
+                border: 2px solid var(--neon-purple); min-width: auto;
+            }
+            #weapon-name { font-size: 12px; margin-bottom: 0; letter-spacing: 2px; }
+            .ammo-count { font-size: 20px; }
+            .score-group, .level-group, .time-group {
+                position: absolute; right: 15px; background: rgba(20,28,42,0.8);
+                padding: 6px 12px; border-radius: 8px; border: 1px solid var(--moist-teal);
+                border-left: 1px solid var(--moist-teal); 
+            }
+            .score-group { top: 90px; font-size: 12px; }
+            .level-group { top: 130px; min-width: 0; }
+            .time-group { top: 170px; min-width: 0; }
+            #level-label, #time-label { display: none; } 
+            #level-num, #time-display { font-size: 14px; }
             #minimap { 
-                opacity: 0.55; 
-                transform: scale(0.8); 
-                transform-origin: top right;
+                opacity: 0.7; transform: scale(0.65); transform-origin: top right; top: 15px; right: 15px;
             }
             #pause-btn { 
-                background: rgba(34,45,58,0.3); 
-                opacity: 0.7; 
-                transform: scale(0.8);
-                transform-origin: top right;
-                right: 120px;
+                background: rgba(34,45,58,0.7); transform: scale(0.7); transform-origin: top right; top: 15px; right: 110px;
             }
             .control-btn { 
-                background: rgba(34,45,58,0.3); 
-                backdrop-filter: blur(2px);
+                background: rgba(34,45,58,0.5); backdrop-filter: blur(2px);
             }
             #joystick-zone {
-                background: rgba(52,190,205,0.08);
-                border-color: rgba(170,0,255,0.3);
+                background: rgba(52,190,205,0.08); border-color: rgba(170,0,255,0.3);
             }
         }
     </style>
 </head>
 <body>
 
-    <div id="start-menu" class="cyber-panel">
-        <video id="start-bg-video" autoplay loop muted playsinline>
-            <source src="https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/bgvideo.mp4" type="video/mp4">
-        </video>
-        <div id="start-bg-overlay"></div>
+    <video id="start-bg-video" autoplay loop muted playsinline>
+        <source src="https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/bgvideo.mp4" type="video/mp4">
+    </video>
+    <div id="start-bg-overlay"></div>
 
+    <div id="start-menu" class="cyber-panel">
         <h1 style="color: var(--moist-teal-light);">SFWFPS: Liquid Edition</h1>
         <button class="start-btn" id="start-btn">LOADING ASSETS...</button>
         <p>Gamepad: Left Stick = Move • Right Stick = Look • RT = Fire • X = Dodge • LB/RB = Swap<br>Keyboard: WASD = Move • F = Dodge • Q = Swap • Click = Fire • ESC = Pause</p>
@@ -290,15 +322,44 @@
             }
         };
 
+        const fixGltfMaterials = (gltf) => {
+            gltf.scene.traverse((child) => {
+                if (child.isMesh && child.material) {
+                    const mats = Array.isArray(child.material) ? child.material : [child.material];
+                    const newMats = mats.map(mat => {
+                        if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
+                            // Swap to Lambert for retro PS1 shading (responds to light, no PBR blackness)
+                            const lambertMat = new THREE.MeshLambertMaterial({
+                                color: mat.color,
+                                map: mat.map,
+                                alphaTest: mat.alphaTest,
+                                transparent: mat.transparent,
+                                opacity: mat.opacity,
+                                side: mat.side,
+                                vertexColors: mat.vertexColors
+                            });
+                            mat.dispose(); // Clean up old material
+                            return lambertMat;
+                        }
+                        return mat;
+                    });
+                    child.material = Array.isArray(child.material) ? newMats : newMats[0];
+                }
+            });
+        };
+
         gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/moistling.glb', (gltf) => {
+            fixGltfMaterials(gltf);
             sourceGltfs.moistling = gltf; checkStartBtn();
         }, undefined, (e) => { console.error('Failed to load moistling.glb', e); checkStartBtn(); });
 
         gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/ripple-reaver.glb', (gltf) => {
+            fixGltfMaterials(gltf);
             sourceGltfs.rippleReaver = gltf; checkStartBtn();
         }, undefined, (e) => { console.error('Failed to load ripple-reaver.glb', e); checkStartBtn(); });
 
         gltfLoader.load('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/models/aqua-overlord.glb', (gltf) => {
+            fixGltfMaterials(gltf);
             sourceGltfs.aquaOverlord = gltf; checkStartBtn();
         }, undefined, (e) => { console.error('Failed to load aqua-overlord.glb', e); checkStartBtn(); });
         // -----------------------------
@@ -475,9 +536,9 @@
         scene.background = new THREE.Color(0x222d3a); 
         scene.fog = new THREE.FogExp2(0x222d3a, 0.08);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 2.5);
         scene.add(ambientLight);
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 3.5);
         dirLight.position.set(5, 10, 5);
         scene.add(dirLight);
 
@@ -487,6 +548,7 @@
         const renderWidth = 320; 
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 100);
         const renderer = new THREE.WebGLRenderer({ antialias: false });
+        renderer.outputColorSpace = THREE.SRGBColorSpace; 
         
         const renderScene = new RenderPass(scene, camera);
         const bloomPass = new UnrealBloomPass(new THREE.Vector2(renderWidth, window.innerHeight), 1.6, 0.3, 0.75);
@@ -620,7 +682,6 @@
         const enemies = [];
         
         function spawnEnemy(gridX, gridZ, isBoss = false, isFast = false) {
-            // HARD FORCED: Bosses must always try to be GLTF. Minions are 50/50.
             let useGltf = isBoss ? true : Math.random() > 0.5;
             let mesh;
             let mixer = null;
@@ -636,7 +697,6 @@
                     action.play();
                 }
                 
-                // Increased sizes for GLTF models
                 if (isBoss) baseScale = 3.8;
                 else if (isFast) baseScale = 1.2;
                 else baseScale = 1.8;
@@ -644,7 +704,6 @@
                 const mat = isFast ? fastEnemyWaterMat : enemyWaterMat;
                 mesh = createWaterHumanoid(mat);
                 
-                // Standard sizes for procedural models
                 if (isBoss) baseScale = 2.0;
                 else if (isFast) baseScale = 0.55;
                 else baseScale = 0.8;
@@ -819,7 +878,6 @@
             
             document.getElementById('boss-ui').style.display = 'none';
 
-            // IMPORTANT: Clear old enemies cleanly from the scene and array for ALL levels
             for(let e of enemies) if(e.mesh) scene.remove(e.mesh);
             enemies.length = 0;
 
@@ -958,6 +1016,8 @@
             document.getElementById('pause-btn').style.display = 'none';
             crosshair.style.display = 'none';
             document.getElementById('start-menu').style.display = 'flex';
+            document.getElementById('start-bg-video').style.display = 'block';
+            document.getElementById('start-bg-overlay').style.display = 'block';
             document.getElementById('start-bg-video').play();
             currentFocusIndex = 0; updateGamepadUI();
             playMusic(menuMusic);
@@ -979,6 +1039,8 @@
             document.getElementById('pause-btn').style.display = 'none';
             crosshair.style.display = 'none';
             document.getElementById('start-menu').style.display = 'flex';
+            document.getElementById('start-bg-video').style.display = 'block';
+            document.getElementById('start-bg-overlay').style.display = 'block';
             document.getElementById('start-bg-video').play();
             currentFocusIndex = 0; updateGamepadUI();
             playMusic(menuMusic);
@@ -1139,9 +1201,22 @@
         document.addEventListener('mousemove', e => { if (isPointerLocked && !paused) playerAngle -= e.movementX * 0.0035; }); 
 
         document.getElementById('start-btn').addEventListener('click', () => { 
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().then(() => {
+                    if (screen.orientation && screen.orientation.lock) {
+                        screen.orientation.lock('landscape').catch(e => console.warn('Orientation lock failed:', e));
+                    }
+                }).catch(e => console.warn('Fullscreen failed:', e));
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+
             gameStartTime = Date.now();
             playMusic(gameMusic); 
             document.getElementById('start-bg-video').pause();
+            document.getElementById('start-bg-video').style.display = 'none';
+            document.getElementById('start-bg-overlay').style.display = 'none';
             document.getElementById('start-menu').style.display = 'none'; 
             document.getElementById('hud').style.display = 'block'; 
             document.getElementById('minimap').style.display = 'block'; 
