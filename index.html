@@ -365,10 +365,18 @@
         // -----------------------------
 
         let audioCtx;
-        let menuMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/before_the_gate_closes.mp3');
+        let menuMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Liquid%20FPS%20Soundtrack/1%20-%20Before%20the%20Gate%20(Intro)%20-%20Pazuzu.mp3');
         menuMusic.loop = true;
-        let gameMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Trench_Runner.mp3');
-        gameMusic.loop = true;
+        
+        let level12Music = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Liquid%20FPS%20Soundtrack/2%20-%20Beneath%20the%20Liquid%20Sky%20-%20Pazuzu.mp3');
+        level12Music.loop = true;
+        
+        let level3PlusMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Liquid%20FPS%20Soundtrack/3%20-%20Liquid%20Beneath%20the%20Winter%20Fog%20-%20Pazuzu.mp3');
+        level3PlusMusic.loop = true;
+        
+        let endMusic = new Audio('https://raw.githubusercontent.com/MOIST-Token/MOIST-Games/MOIST-FPS/Liquid%20FPS%20Soundtrack/4%20-%20Before%20the%20Final%20Bow%20(Outro)%20-%20Pazuzu.mp3');
+        endMusic.loop = true;
+        
         let currentMusic = null;
         let musicMuted = false;
         let sfxMuted = false;
@@ -873,6 +881,12 @@
         function startLevel(level) {
             currentLevel = level;
             
+            if (level === 1 || level === 2) {
+                if (currentMusic !== level12Music) playMusic(level12Music);
+            } else if (level >= 3) {
+                if (currentMusic !== level3PlusMusic) playMusic(level3PlusMusic);
+            }
+            
             portalActive = false;
             portalMesh.visible = false;
             
@@ -1027,7 +1041,7 @@
         document.getElementById('game-over-restart-btn').addEventListener('click', () => {
             if (document.pointerLockElement) document.exitPointerLock();
             resetGame();
-            playMusic(gameMusic);
+            playMusic(level12Music);
         }); 
 
         document.getElementById('pause-restart-btn').addEventListener('click', () => { 
@@ -1213,7 +1227,7 @@
             }
 
             gameStartTime = Date.now();
-            playMusic(gameMusic); 
+            playMusic(level12Music); 
             document.getElementById('start-bg-video').pause();
             document.getElementById('start-bg-video').style.display = 'none';
             document.getElementById('start-bg-overlay').style.display = 'none';
@@ -1325,6 +1339,7 @@
                 document.getElementById('game-over-score').innerText = "FINAL SCORE: " + score; 
                 document.getElementById('game-over-menu').style.display = 'flex'; 
                 currentFocusIndex = 0; updateGamepadUI();
+                playMusic(endMusic);
             } else { showHitMarker(); } 
         }
 
@@ -1513,6 +1528,7 @@
                             `;
                             document.getElementById('victory-menu').style.display = 'flex'; 
                             currentFocusIndex = 0; updateGamepadUI();
+                            playMusic(endMusic);
                         } 
                     } 
                     continue; 
